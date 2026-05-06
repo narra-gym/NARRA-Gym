@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EmoNest — Where Feelings Become Worlds</title>
+  <meta name="description" content="EmoNest is an AI-powered emotional storytelling experience. Tell us how you feel, and we'll craft a world just for you." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #faf8f5;
+      --bg-warm:      #f5f0ea;
+      --surface:      #ffffff;
+      --card:         #ffffff;
+      --card-tinted:  #fdf9f6;
+      --border:       rgba(160,130,110,0.12);
+      --border-soft:  rgba(160,130,110,0.08);
+
+      --text-primary:   #2c2420;
+      --text-secondary: #7a6e68;
+      --text-tertiary:  #b8afa9;
+
+      --lavender:     #c4b5e8;
+      --lavender-deep:#9b86d4;
+      --lavender-bg:  #f0ebfa;
+
+      --mint:         #8ecfb2;
+      --mint-deep:    #5db896;
+      --mint-bg:      #eaf7f2;
+
+      --peach:        #f0b8a0;
+      --peach-deep:   #e0916e;
+      --peach-bg:     #fdf0ea;
+
+      --blush:        #f0c4c4;
+      --blush-deep:   #d48080;
+      --blush-bg:     #fdf0f0;
+
+      --sky:          #a8d4f0;
+      --sky-deep:     #6ab0e0;
+      --sky-bg:       #eaf4fc;
+
+      --honey:        #f0d898;
+      --honey-deep:   #d4a840;
+      --honey-bg:     #fdf8e8;
+
+      --gradient-main: linear-gradient(135deg, #c4b5e8 0%, #8ecfb2 50%, #f0b8a0 100%);
+      --gradient-soft: linear-gradient(135deg, #f0ebfa 0%, #eaf7f2 50%, #fdf0ea 100%);
+      --shadow-sm:  0 2px 12px rgba(80,60,40,0.06);
+      --shadow-md:  0 8px 32px rgba(80,60,40,0.09);
+      --shadow-lg:  0 20px 60px rgba(80,60,40,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ──────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(250,248,245,0.82);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    nav.scrolled {
+      background: rgba(250,248,245,0.96);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-logo {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 20px;
+      font-weight: 600;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .nav-cta {
+      background: var(--lavender-deep) !important;
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 24px;
+      font-weight: 500 !important;
+      font-size: 14px !important;
+      transition: box-shadow 0.2s, transform 0.2s !important;
+      box-shadow: 0 4px 16px rgba(155,134,212,0.3);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(155,134,212,0.4) !important;
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 100px;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    /* Layered soft blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.55;
+      animation: blobFloat 12s ease-in-out infinite;
+    }
+
+    .blob-1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #d8ccf5, #c4b5e8);
+      top: -120px; left: -120px;
+      animation-delay: 0s;
+    }
+
+    .blob-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #b8e8d4, #8ecfb2);
+      bottom: -100px; right: -80px;
+      animation-delay: -4s;
+    }
+
+    .blob-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #f8d8c4, #f0b8a0);
+      bottom: 20%; left: 10%;
+      animation-delay: -8s;
+    }
+
+    @keyframes blobFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(30px, -20px) scale(1.04); }
+      66%       { transform: translate(-20px, 30px) scale(0.97); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 6px 16px 6px 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--lavender-deep);
+      margin-bottom: 36px;
+      box-shadow: var(--shadow-sm);
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    .badge-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--lavender-deep);
+      animation: dotBlink 2s ease-in-out infinite;
+    }
+
+    @keyframes dotBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    .hero-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(52px, 8.5vw, 100px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.35s forwards;
+    }
+
+    .hero-title .gradient-word {
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-style: italic;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(17px, 2.2vw, 22px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      max-width: 580px;
+      margin: 0 auto 52px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.65s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 36px;
+      background: var(--lavender-deep);
+      color: #fff;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(155,134,212,0.35);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(155,134,212,0.45);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 32px;
+      background: var(--surface);
+      color: var(--text-primary);
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-tertiary);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.2s forwards;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 32px;
+      background: linear-gradient(to bottom, var(--lavender-deep), transparent);
+      animation: scrollDrop 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollDrop {
+      0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
+      40%  { opacity: 1; transform: scaleY(1); }
+      100% { opacity: 0; transform: scaleY(1) translateY(8px); }
+    }
+
+    /* ─── INTRO QUOTE ──────────────────────────────────────── */
+    .intro-quote {
+      padding: 120px 24px;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .intro-quote p {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(26px, 3.8vw, 50px);
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .intro-quote p strong {
+      color: var(--text-primary);
+      font-style: normal;
+    }
+
+    /* ─── WAVY DIVIDER ─────────────────────────────────────── */
+    .wave-divider { overflow: hidden; line-height: 0; }
+    .wave-divider svg { display: block; width: 100%; }
+
+    /* ─── SECTIONS ─────────────────────────────────────────── */
+    .section {
+      padding: 100px 24px;
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--lavender-deep);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--gradient-main);
+      border-radius: 1px;
+    }
+
+    .section-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(34px, 5vw, 60px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+    }
+
+    .section-desc {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      max-width: 540px;
+      margin-bottom: 60px;
+    }
+
+    /* ─── BENTO GRID ───────────────────────────────────────── */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .bento-card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 28px;
+      padding: 36px 32px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.35s cubic-bezier(.16,1,.3,1), box-shadow 0.35s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .bento-card.wide  { grid-column: span 2; }
+    .bento-card.tinted { background: var(--card-tinted); }
+
+    .bento-icon-wrap {
+      width: 54px; height: 54px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 22px;
+    }
+
+    .ic-lav   { background: var(--lavender-bg); }
+    .ic-mint  { background: var(--mint-bg); }
+    .ic-peach { background: var(--peach-bg); }
+    .ic-blush { background: var(--blush-bg); }
+    .ic-sky   { background: var(--sky-bg); }
+    .ic-honey { background: var(--honey-bg); }
+
+    .bento-card h3 {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 21px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .bento-card p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Chat mockup */
+    .chat-mockup {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .chat-msg { display: flex; gap: 10px; align-items: flex-end; }
+    .chat-msg.user { flex-direction: row-reverse; }
+
+    .chat-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .av-ai   { background: var(--lavender-bg); }
+    .av-user { background: var(--mint-bg); }
+
+    .chat-bubble {
+      padding: 10px 14px;
+      border-radius: 16px 16px 16px 4px;
+      font-size: 13px;
+      line-height: 1.55;
+      max-width: 80%;
+    }
+
+    .bubble-ai {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .bubble-user {
+      background: var(--lavender-deep);
+      color: #fff;
+      border-radius: 16px 16px 4px 16px;
+    }
+
+    .choice-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .choice-item {
+      background: var(--lavender-bg);
+      border: 1px solid rgba(155,134,212,0.2);
+      border-radius: 10px;
+      padding: 8px 13px;
+      font-size: 12.5px;
+      color: var(--lavender-deep);
+      font-weight: 500;
+    }
+
+    /* Progress mockup */
+    .progress-mockup {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-top: 22px;
+    }
+
+    .p-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 0;
+    }
+
+    .p-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .p-done   { background: var(--mint-deep); }
+    .p-active {
+      background: var(--lavender-deep);
+      box-shadow: 0 0 0 3px rgba(155,134,212,0.25);
+      animation: pulseDot 1.8s ease-in-out infinite;
+    }
+    .p-pending { background: var(--text-tertiary); }
+
+    @keyframes pulseDot {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(155,134,212,0.25); }
+      50%       { box-shadow: 0 0 0 5px rgba(155,134,212,0.12); }
+    }
+
+    .p-label { font-size: 13px; color: var(--text-secondary); }
+    .p-label.active { color: var(--text-primary); font-weight: 500; }
+
+    .progress-track {
+      height: 4px;
+      background: var(--bg-warm);
+      border-radius: 2px;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 60%;
+      background: var(--gradient-main);
+      border-radius: 2px;
+      animation: progressAnim 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes progressAnim {
+      from { width: 45%; }
+      to   { width: 80%; }
+    }
+
+    /* Tag cloud */
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+
+    .tag {
+      padding: 5px 13px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .tag-lav   { background: var(--lavender-bg); color: var(--lavender-deep); }
+    .tag-mint  { background: var(--mint-bg);     color: var(--mint-deep); }
+    .tag-peach { background: var(--peach-bg);    color: var(--peach-deep); }
+    .tag-sky   { background: var(--sky-bg);      color: var(--sky-deep); }
+    .tag-blush { background: var(--blush-bg);    color: var(--blush-deep); }
+    .tag-honey { background: var(--honey-bg);    color: var(--honey-deep); }
+
+    /* ─── HOW IT WORKS ──────────────────────────────────────── */
+    .how-section {
+      padding: 110px 24px;
+      background: var(--gradient-soft);
+    }
+
+    .how-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      margin-top: 64px;
+      background: var(--surface);
+      border-radius: 28px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .step-card {
+      padding: 40px 28px;
+      border-right: 1px solid var(--border-soft);
+      position: relative;
+      transition: background 0.3s;
+    }
+
+    .step-card:last-child { border-right: none; }
+    .step-card:hover { background: var(--bg); }
+
+    .step-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--lavender-deep);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .step-icon {
+      font-size: 36px;
+      display: block;
+      margin-bottom: 18px;
+    }
+
+    .step-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* ─── FEATURE ROWS ──────────────────────────────────────── */
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      padding: 80px 0;
+    }
+
+    .feature-row + .feature-row {
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .feature-row.flip { direction: rtl; }
+    .feature-row.flip > * { direction: ltr; }
+
+    .feature-text h3 {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(26px, 3.5vw, 42px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+    }
+
+    .feature-text p {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .feature-visual {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 28px;
+      padding: 36px;
+      box-shadow: var(--shadow-md);
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visual-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.4;
+    }
+
+    .vb-lav { width: 260px; height: 260px; background: #d8ccf5; top: -60px; right: -60px; }
+    .vb-mint { width: 220px; height: 220px; background: #b8e8d4; bottom: -50px; left: -40px; }
+
+    .scene-card {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 22px;
+      position: relative;
+      z-index: 1;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .scene-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--lavender-deep);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .scene-body {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .char-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .char-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .char-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* emotion world grid */
+    .emotion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .emotion-tile {
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .emotion-tile .e-emoji { font-size: 26px; margin-bottom: 8px; display: block; }
+    .emotion-tile .e-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .emotion-tile .e-desc { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+
+    /* ─── PULL QUOTE ────────────────────────────────────────── */
+    .pull-quote {
+      padding: 120px 24px;
+      text-align: center;
+      background: var(--bg-warm);
+    }
+
+    .pull-quote blockquote {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(24px, 3.5vw, 46px);
+      font-weight: 500;
+      font-style: italic;
+      line-height: 1.3;
+      max-width: 820px;
+      margin: 0 auto;
+      color: var(--text-secondary);
+    }
+
+    .pull-quote blockquote em {
+      font-style: normal;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .pull-quote cite {
+      display: block;
+      margin-top: 28px;
+      font-size: 14px;
+      font-style: normal;
+      color: var(--text-tertiary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── STAT BAND ─────────────────────────────────────────── */
+    .stat-band {
+      padding: 80px 24px;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .stat-row {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 16px 24px;
+      border-right: 1px solid var(--border-soft);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(48px, 6vw, 72px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    /* ─── TECH SECTION ──────────────────────────────────────── */
+    .tech-section {
+      padding: 100px 24px;
+      background: var(--surface);
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .tech-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 56px;
+      text-align: left;
+    }
+
+    .tech-card {
+      background: var(--bg);
+      border: 1px solid var(--border-soft);
+      border-radius: 20px;
+      padding: 28px 24px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tech-card .t-icon { font-size: 30px; margin-bottom: 14px; }
+
+    .tech-card h4 {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .tech-card p { font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ─── CTA ───────────────────────────────────────────────── */
+    .cta-section {
+      padding: 160px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-warm);
+    }
+
+    .cta-blob-1 {
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #d8ccf5, transparent);
+      top: -200px; left: -200px;
+      opacity: 0.5;
+      filter: blur(80px);
+    }
+
+    .cta-blob-2 {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #b8e8d4, transparent);
+      bottom: -160px; right: -160px;
+      opacity: 0.4;
+      filter: blur(80px);
+    }
+
+    .cta-content { position: relative; z-index: 1; }
+
+    .cta-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--mint-deep);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .cta-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(44px, 7vw, 88px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+    }
+
+    .cta-gradient-text {
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-style: italic;
+    }
+
+    .cta-sub {
+      font-size: 19px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto 52px;
+      line-height: 1.6;
+    }
+
+    .cta-note {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    /* ─── FOOTER ────────────────────────────────────────────── */
+    footer {
+      padding: 48px 32px;
+      border-top: 1px solid var(--border-soft);
+      background: var(--surface);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 22px;
+      font-weight: 600;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-copy { font-size: 13px; color: var(--text-tertiary); }
+
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ─── ANIMATIONS ────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .bento { grid-template-columns: 1fr; }
+      .bento-card.wide { grid-column: span 1; }
+      .steps-grid { grid-template-columns: 1fr 1fr; border-radius: 20px; }
+      .step-card:nth-child(2) { border-right: none; }
+      .step-card:nth-child(3) { border-right: 1px solid var(--border-soft); }
+      .feature-row { grid-template-columns: 1fr; gap: 28px; }
+      .feature-row.flip { direction: ltr; }
+      .tech-grid { grid-template-columns: 1fr 1fr; }
+      .stat-row { grid-template-columns: 1fr; }
+      .stat-item { border-right: none; border-bottom: 1px solid var(--border-soft); }
+      .stat-item:last-child { border-bottom: none; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .step-card { border-right: none !important; border-bottom: 1px solid var(--border-soft); }
+      .step-card:last-child { border-bottom: none; }
+      .tech-grid { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ──────────────────────────────────────────── -->
+  <nav id="main-nav">
+    <span class="nav-logo">EmoNest</span>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How it Works</a></li>
+      <li><a href="#technology">Technology</a></li>
+      <li><a href="#cta" class="nav-cta">Begin Your Story</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Introducing EmoNest
+      </div>
+
+      <h1 class="hero-title">
+        Where feelings<br>
+        become <span class="gradient-word">worlds.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        An AI-powered emotional storytelling experience. Share how you feel, and EmoNest weaves a personalized interactive world around your heart.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#cta" class="btn-primary">
+          Begin Your Story &nbsp;→
+        </a>
+        <a href="#how" class="btn-secondary">
+          See How It Works
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ─── INTRO QUOTE ───────────────────────────────────── -->
+  <div class="intro-quote reveal">
+    <p>
+      <strong>Your emotions deserve more than a journal entry.</strong><br>
+      EmoNest transforms what you're carrying into a living story — with characters, choices, and scenes that feel like <strong>yours.</strong>
+    </p>
+  </div>
+
+  <!-- ─── DIVIDER ───────────────────────────────────────── -->
+  <div style="height:1px; background: var(--border-soft); max-width:1160px; margin:0 auto;"></div>
+
+  <!-- ─── FEATURES ─────────────────────────────────────── -->
+  <section class="section" id="features">
+    <p class="section-eyebrow reveal">Core Features</p>
+    <h2 class="section-title reveal">Emotion, shaped<br>into experience.</h2>
+    <p class="section-desc reveal">Six thoughtful pillars that make every EmoNest story feel uniquely, quietly yours.</p>
+
+    <div class="bento">
+
+      <!-- Card 1: Wide — Branching Dialogue -->
+      <div class="bento-card wide reveal">
+        <div class="bento-icon-wrap ic-lav">💬</div>
+        <h3>Branching Interactive Dialogue</h3>
+        <p>Every scene offers choices that carry weight. Your words shape characters, tone, and the path ahead — no two stories are ever alike.</p>
+        <div class="chat-mockup">
+          <div class="chat-msg">
+            <div class="chat-avatar av-ai">🌿</div>
+            <div class="chat-bubble bubble-ai">Elara looks at you with quiet understanding. "You've been carrying this a long time, haven't you?" The forest around you seems to listen.</div>
+          </div>
+          <div class="choice-list">
+            <div class="choice-item">✦ "Longer than I can remember."</div>
+            <div class="choice-item">✦ Stay silent and watch the fireflies.</div>
+            <div class="choice-item">✦ "What do you know about it?"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Emotional Intake -->
+      <div class="bento-card tinted reveal reveal-d1">
+        <div class="bento-icon-wrap ic-mint">🧭</div>
+        <h3>Emotional Intake Flow</h3>
+        <p>A gentle series of guided questions tunes EmoNest to exactly what you need — comfort, adventure, catharsis, or quiet escape.</p>
+        <div class="tag-cloud">
+          <span class="tag tag-lav">Anxiety</span>
+          <span class="tag tag-mint">Healing</span>
+          <span class="tag tag-peach">Loneliness</span>
+          <span class="tag tag-sky">Wonder</span>
+          <span class="tag tag-blush">Grief</span>
+          <span class="tag tag-honey">Growth</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Staged Generation -->
+      <div class="bento-card tinted reveal reveal-d2">
+        <div class="bento-icon-wrap ic-peach">⚙️</div>
+        <h3>Staged World Generation</h3>
+        <p>Your story is built in five deliberate steps — world, characters, structure, opening, hooks — with live progress you can watch unfold.</p>
+        <div class="progress-mockup">
+          <div class="p-step"><div class="p-dot p-done"></div><span class="p-label">World built</span></div>
+          <div class="p-step"><div class="p-dot p-done"></div><span class="p-label">Characters created</span></div>
+          <div class="p-step"><div class="p-dot p-active"></div><span class="p-label active">Crafting your opening…</span></div>
+          <div class="p-step"><div class="p-dot p-pending"></div><span class="p-label">Interactive hooks</span></div>
+          <div class="progress-track"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- Card 4: Keyword Personalization -->
+      <div class="bento-card reveal">
+        <div class="bento-icon-wrap ic-honey">✨</div>
+        <h3>Keyword Personalization</h3>
+        <p>Themes, tones, and character archetypes are distilled from your input into a personalization layer that shapes every line of your story.</p>
+        <div class="tag-cloud">
+          <span class="tag tag-lav">Rainy city</span>
+          <span class="tag tag-sky">Jazz café</span>
+          <span class="tag tag-mint">Old friend</span>
+          <span class="tag tag-peach">Unfinished song</span>
+        </div>
+      </div>
+
+      <!-- Card 5: Interactive Moments -->
+      <div class="bento-card reveal reveal-d1">
+        <div class="bento-icon-wrap ic-blush">🎮</div>
+        <h3>In-Story Micro-Interactions</h3>
+        <p>At key moments, the story opens into interactive mini-experiences — memory fragments, gentle puzzles, and custom widgets that make your narrative come alive.</p>
+      </div>
+
+      <!-- Card 6: Pacing Engine -->
+      <div class="bento-card reveal reveal-d2">
+        <div class="bento-icon-wrap ic-sky">🔮</div>
+        <h3>AI Pacing & Reflection</h3>
+        <p>A quiet intelligence layer monitors your story's rhythm, triggers scene transitions at just the right moment, and keeps emotional momentum flowing.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── PULL QUOTE ────────────────────────────────────── -->
+  <div class="pull-quote">
+    <blockquote class="reveal">
+      "Not a chatbot. Not a game.<br>
+      <em>An emotional world, grown from your words.</em>"
+    </blockquote>
+    <cite class="reveal reveal-d1">— EmoNest</cite>
+  </div>
+
+  <!-- ─── FEATURE DETAIL ROWS ──────────────────────────── -->
+  <section class="section">
+
+    <div class="feature-row">
+      <div class="feature-text reveal">
+        <p class="section-eyebrow" style="margin-bottom: 16px;">Deep Narrative</p>
+        <h3>Stories that know<br>what you need.</h3>
+        <p>EmoNest reads context — your emotional state, narrative history, and pacing — to deliver scenes that resonate at precisely the right moment.</p>
+        <a href="#cta" class="btn-primary" style="font-size: 15px; padding: 13px 28px; display: inline-flex;">Begin your story →</a>
+      </div>
+      <div class="feature-visual reveal reveal-d1">
+        <div class="visual-blob vb-lav"></div>
+        <div class="visual-blob vb-mint"></div>
+        <div class="scene-card">
+          <div class="scene-tag">Chapter 3 — The Lighthouse</div>
+          <div class="scene-body">
+            The beam sweeps across the fog. Maya grips the railing, salt on her lips, the letter still warm in her coat pocket. She's been here before — not this lighthouse, but this feeling.
+          </div>
+          <div class="char-row">
+            <div class="char-pill"><div class="char-dot" style="background:var(--lavender-deep);"></div> Maya</div>
+            <div class="char-pill"><div class="char-dot" style="background:var(--mint-deep);"></div> The Keeper</div>
+            <div class="char-pill"><div class="char-dot" style="background:var(--peach-deep);"></div> The Letter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row flip">
+      <div class="feature-text reveal reveal-d1">
+        <p class="section-eyebrow" style="margin-bottom: 16px;">Emotional Mapping</p>
+        <h3>Every emotion,<br>a different world.</h3>
+        <p>Longing becomes a rainy coastal town. Anxiety becomes a locked museum at midnight. Growth becomes a mountain you choose to climb. EmoNest maps feelings to environments with care.</p>
+        <a href="#how" class="btn-secondary" style="font-size: 15px; padding: 12px 26px; display: inline-flex;">See how it works</a>
+      </div>
+      <div class="feature-visual reveal" style="justify-content: center; align-items: center; background: var(--gradient-soft);">
+        <div class="emotion-grid">
+          <div class="emotion-tile">
+            <span class="e-emoji">🌧️</span>
+            <div class="e-name">Longing</div>
+            <div class="e-desc">Coastal rain, old letters</div>
+          </div>
+          <div class="emotion-tile">
+            <span class="e-emoji">🏛️</span>
+            <div class="e-name">Anxiety</div>
+            <div class="e-desc">Locked halls, echoes</div>
+          </div>
+          <div class="emotion-tile">
+            <span class="e-emoji">⛰️</span>
+            <div class="e-name">Growth</div>
+            <div class="e-desc">Summits, first light</div>
+          </div>
+          <div class="emotion-tile">
+            <span class="e-emoji">🌸</span>
+            <div class="e-name">Healing</div>
+            <div class="e-desc">Quiet gardens, morning</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ─── HOW IT WORKS ─────────────────────────────────── -->
+  <section class="how-section" id="how">
+    <div class="how-inner">
+      <p class="section-eyebrow reveal">Process</p>
+      <h2 class="section-title reveal">From feeling to story,<br>in four gentle steps.</h2>
+      <p class="section-desc reveal">EmoNest guides you through a thoughtful intake, then builds your world while you watch — no tech knowledge needed.</p>
+
+      <div class="steps-grid reveal">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <span class="step-icon">💭</span>
+          <div class="step-title">Share Your Feeling</div>
+          <div class="step-desc">Describe what you're going through — or what kind of experience you're seeking. There are no wrong answers here.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <span class="step-icon">🌱</span>
+          <div class="step-title">Answer a Few Questions</div>
+          <div class="step-desc">EmoNest asks gentle clarifying questions to tune the story's tone, world, and characters just for you.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <span class="step-icon">🌍</span>
+          <div class="step-title">Watch Your World Build</div>
+          <div class="step-desc">Five AI generation steps construct your world, cast your characters, and write your opening — live.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <span class="step-icon">✨</span>
+          <div class="step-title">Live Inside Your Story</div>
+          <div class="step-desc">Make choices, discover scenes, encounter interactive moments, and guide your narrative to its conclusion.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── STAT BAND ─────────────────────────────────────── -->
+  <div class="stat-band">
+    <div class="stat-row">
+      <div class="stat-item reveal">
+        <span class="stat-num">5</span>
+        <div class="stat-label">AI generation steps per story</div>
+      </div>
+      <div class="stat-item reveal reveal-d1">
+        <span class="stat-num">∞</span>
+        <div class="stat-label">Unique story paths possible</div>
+      </div>
+      <div class="stat-item reveal reveal-d2">
+        <span class="stat-num">0</span>
+        <div class="stat-label">Stories exactly alike</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TECH SECTION ─────────────────────────────────── -->
+  <section class="tech-section" id="technology">
+    <div class="tech-inner">
+      <p class="section-eyebrow reveal" style="justify-content:center;">Under the surface</p>
+      <h2 class="section-title reveal" style="text-align:center;">Thoughtful technology,<br>behind every word.</h2>
+      <p style="font-size:17px;font-weight:300;color:var(--text-secondary);text-align:center;line-height:1.7;max-width:520px;margin:16px auto 0;" class="reveal">
+        EmoNest is powered by state-of-the-art language models and a carefully designed multi-stage pipeline built for emotional nuance.
+      </p>
+
+      <div class="tech-grid">
+        <div class="tech-card reveal">
+          <div class="t-icon">🤖</div>
+          <h4>GPT-4o Powered</h4>
+          <p>OpenAI's most capable model drives every story generation step, character voice, and pacing decision.</p>
+        </div>
+        <div class="tech-card reveal reveal-d1">
+          <div class="t-icon">🔗</div>
+          <h4>Multi-Stage Pipeline</h4>
+          <p>A five-step structured generation approach ensures narrative coherence from world-building to final scene.</p>
+        </div>
+        <div class="tech-card reveal reveal-d2">
+          <div class="t-icon">⚡</div>
+          <h4>Real-Time Progress</h4>
+          <p>FastAPI backend with live progress tracking so you're always gently informed, never waiting in the dark.</p>
+        </div>
+        <div class="tech-card reveal">
+          <div class="t-icon">🧠</div>
+          <h4>Context-Aware Memory</h4>
+          <p>A reflection layer continuously analyzes your story's arc to keep pacing tender and narrative momentum strong.</p>
+        </div>
+        <div class="tech-card reveal reveal-d1">
+          <div class="t-icon">🎨</div>
+          <h4>Dynamic UI Generation</h4>
+          <p>The AI generates interactive components embedded right inside your story — beyond text, into experience.</p>
+        </div>
+        <div class="tech-card reveal reveal-d2">
+          <div class="t-icon">🕊️</div>
+          <h4>Privacy-First Design</h4>
+          <p>Your emotional inputs are used only to craft your story. Responsible AI is not optional — it's foundational.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ───────────────────────────────────────────── -->
+  <section class="cta-section" id="cta">
+    <div class="cta-blob-1"></div>
+    <div class="cta-blob-2"></div>
+    <div class="cta-content">
+      <p class="cta-eyebrow reveal">Your story is waiting</p>
+      <h2 class="cta-title reveal">
+        Begin<br>
+        <span class="cta-gradient-text">feeling.</span>
+      </h2>
+      <p class="cta-sub reveal">Tell EmoNest how you feel. In minutes, you'll be inside a world built entirely around you.</p>
+      <div class="reveal reveal-d1">
+        <a href="#" class="btn-primary" style="font-size: 18px; padding: 18px 52px;">
+          Start Your Story &nbsp;→
+        </a>
+      </div>
+      <p class="cta-note reveal reveal-d2">No account required. Free to explore.</p>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────────── -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-logo">EmoNest</span>
+      <span class="footer-copy">© 2025 EmoNest. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── SCRIPTS ───────────────────────────────────────── -->
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Nav scroll effect
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
+</body>
+</html>

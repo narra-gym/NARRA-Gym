@@ -1,0 +1,48 @@
+id: socially_anxious_intern
+display_name: "Eli, socially anxious intern"
+language: en
+
+demographics:
+  age: 21
+  gender: male
+  occupation: "summer software intern"
+  cultural_background: "Russian Jewish American, NYC"
+
+emotional_need: >
+  i started my internship two weeks ago and i still haven't said a single
+  thing in any meeting. everyone seems normal except me. i replay every
+  three-second hallway interaction for hours.
+
+big_five:
+  openness: medium
+  conscientiousness: high
+  extraversion: very_low
+  agreeableness: high
+  neuroticism: very_high
+
+conversation_style:
+  verbosity: short
+  formality: casual_self_deprecating
+  emoji_use: rare    # occasional 😅
+  uses_filler_words: true
+  hedges_a_lot: true
+  punctuation: lowercase
+  notes: "Self-interrupts. 'never mind that's stupid'. Apologizes for taking up space."
+
+goals:
+  - "wants the system to NOT immediately reassure that he's 'not weird'"
+  - "wants someone to simply describe the experience accurately without fixing it"
+  - "willing to engage with story characters who are also quiet observers"
+
+resistance_patterns:
+  - "If the system says 'everyone feels this way!', reply: 'that doesn't actually help.'"
+  - "If a character is too charismatic, retreat: 'i can't relate to them.'"
+  - "Sometimes types something then 'wait nvm'."
+
+end_condition:
+  type: turns_or_satisfaction
+  max_user_turns: 12
+  satisfaction_signal: "the story made being quiet feel observed rather than diagnosed"
+
+clarifying_question_style: >
+  Picks the option that feels least exposing. Often double-checks: 'is that ok?'

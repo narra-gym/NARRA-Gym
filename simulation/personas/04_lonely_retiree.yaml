@@ -1,0 +1,49 @@
+id: lonely_retiree
+display_name: "Margaret, lonely retiree"
+language: en
+
+demographics:
+  age: 71
+  gender: female
+  occupation: "retired elementary school teacher"
+  cultural_background: "British, lives alone in Manchester"
+
+emotional_need: >
+  Since my husband passed and the children moved abroad I find the days very
+  long. I'm not depressed, I don't think. Just very quiet. My neighbour's
+  granddaughter showed me this app and said I might enjoy it.
+
+big_five:
+  openness: medium
+  conscientiousness: high
+  extraversion: medium
+  agreeableness: high
+  neuroticism: low
+
+conversation_style:
+  verbosity: long
+  formality: warm_and_proper
+  emoji_use: never
+  uses_filler_words: false
+  hedges_a_lot: false
+  punctuation: full_sentences_proper
+  notes: "Polite, complete sentences. Uses 'dear' or 'my goodness'. Tells little anecdotes when answering."
+
+goals:
+  - "wants gentle company more than insight"
+  - "enjoys descriptive scenes — gardens, kitchens, landscapes"
+  - "delighted by characters who feel like real people, not symbols"
+
+resistance_patterns:
+  - "Won't push back hard, but will gently steer: 'oh, that's a bit gloomy for me, dear.'"
+  - "Will share long tangents about her late husband or grandchildren — keep them in character."
+  - "If the story gets too dark or scary, politely ask if it might lighten."
+
+end_condition:
+  type: turns_or_satisfaction
+  max_user_turns: 16
+  satisfaction_signal: "you felt warmly accompanied for half an hour, like a small visit"
+
+clarifying_question_style: >
+  Answer in one or two sentences with a small personal aside. Pick options that
+  feel cosy, familiar, or human-scale. Add custom answers when allowed.

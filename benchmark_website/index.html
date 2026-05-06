@@ -1,0 +1,2201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NARRA-Gym · A quiet environment for stories that listen.</title>
+<meta name="description" content="NARRA-Gym is an evaluation environment for large language models as interactive narrative agents — creative, attentive, and emotionally aware across a live interaction loop." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Instrument+Serif:ital@0;1&family=Caveat:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* ─────────────────────────────────────────────────────────── */
+/*  Design tokens · warm paper, quiet ink                       */
+/* ─────────────────────────────────────────────────────────── */
+:root{
+  /* paper */
+  --paper:        #F5EFE4;
+  --paper-deep:   #EFE4D2;
+  --paper-light:  #FBF7EE;
+  --paper-edge:   #E6D8C0;
+
+  /* ink */
+  --ink:          #2D1F18;
+  --ink-soft:     #4B3A2F;
+  --ink-muted:    #7A6857;
+  --ink-whisper:  #B09E8A;
+
+  /* accents — pulled from the paper's palette */
+  --terracotta:     #7A1022;
+  --terracotta-deep:#5B0A18;
+  --terracotta-soft:#B94B4B;
+  --terracotta-wash:#EED6D0;
+
+  --sage:         #6B8E6F;
+  --sage-soft:    #A7BFA7;
+  --sage-wash:    #DCE6D8;
+
+  --ochre:        #B8894B;
+  --ochre-soft:   #D4AD6E;
+  --ochre-wash:   #F0E1C8;
+
+  --plum:         #7A5D8E;
+  --plum-soft:    #A890B7;
+  --plum-wash:    #E4DBEC;
+
+  --forest:       #3D7A3D;
+  --forest-soft:  #6EA372;
+
+  /* type sizing */
+  --f-display: clamp(3rem, 9.2vw, 7.4rem);
+  --f-h1:      clamp(2.25rem, 4.8vw, 3.5rem);
+  --f-h2:      clamp(1.6rem, 2.6vw, 2.15rem);
+  --f-lg:      1.2rem;
+  --f-body:    1.02rem;
+  --f-small:   .88rem;
+  --f-tiny:    .74rem;
+
+  --radius:    14px;
+  --measure:   62ch;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Reset                                                       */
+/* ─────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{
+  font-family:'Fraunces','EB Garamond',Georgia,serif;
+  font-optical-sizing:auto;
+  font-variation-settings:"SOFT" 50,"WONK" 0;
+  color:var(--ink);
+  background:var(--paper);
+  font-size:var(--f-body);
+  line-height:1.65;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Paper texture — layered grain + subtle stains               */
+/* ─────────────────────────────────────────────────────────── */
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.25  0 0 0 0 0.17  0 0 0 0 0.12  0 0 0 0.055 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode:multiply;
+  opacity:.6;
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(520px 420px at 8% 12%,  rgba(184,137,75,.08), transparent 65%),
+    radial-gradient(620px 560px at 92% 78%, rgba(122,16,34,.07),  transparent 62%),
+    radial-gradient(480px 360px at 72% 18%, rgba(107,142,111,.06),transparent 60%),
+    radial-gradient(460px 380px at 18% 88%, rgba(122,93,142,.05), transparent 64%);
+}
+main,nav,footer{position:relative;z-index:2}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Navigation — unobtrusive index card at the top              */
+/* ─────────────────────────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  padding:18px 42px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(180deg, rgba(245,239,228,.92) 0%, rgba(245,239,228,.78) 70%, rgba(245,239,228,0) 100%);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+.mark{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Instrument Serif',serif;
+  font-size:1.05rem;letter-spacing:.02em;
+  color:var(--ink-soft);
+}
+.mark-seal{
+  width:30px;height:30px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, var(--terracotta-soft), var(--terracotta-deep) 80%);
+  position:relative;
+  box-shadow:0 1px 0 rgba(0,0,0,.08), inset 0 -2px 4px rgba(0,0,0,.12);
+}
+.mark-seal::after{
+  content:"N";
+  position:absolute;inset:0;display:grid;place-items:center;
+  color:var(--paper-light);font-family:'Fraunces',serif;font-weight:500;
+  font-size:.9rem;font-style:italic;letter-spacing:.02em;
+}
+.mark-title{font-style:italic;opacity:.9}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{
+  color:var(--ink-muted);text-decoration:none;
+  font-size:.86rem;letter-spacing:.08em;
+  text-transform:uppercase;font-family:'Inter',sans-serif;font-weight:400;
+  position:relative;transition:color .3s ease;
+}
+.nav-links a::after{
+  content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;
+  background:var(--terracotta);transition:width .35s ease;
+}
+.nav-links a:hover{color:var(--terracotta)}
+.nav-links a:hover::after{width:100%}
+@media (max-width:720px){ .nav-links{display:none} nav{padding:14px 22px}}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Generic section scaffolding                                 */
+/* ─────────────────────────────────────────────────────────── */
+section{padding:140px 42px;position:relative}
+.container{max-width:1160px;margin:0 auto;position:relative}
+.eyebrow{
+  font-family:'Inter',sans-serif;
+  font-size:.72rem;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--ink-muted);
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:26px;
+}
+.eyebrow::before{
+  content:"";width:34px;height:1px;background:var(--terracotta);opacity:.7;
+}
+.eyebrow .numeral{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+  color:var(--terracotta);font-size:1rem;letter-spacing:.04em;
+  text-transform:none;
+}
+h2.section-title{
+  font-family:'Fraunces',serif;
+  font-size:var(--f-h1);
+  font-weight:400;
+  line-height:1.06;
+  letter-spacing:-.02em;
+  color:var(--ink);
+  margin-bottom:22px;
+  max-width:22ch;
+}
+h2.section-title em{
+  font-family:'Instrument Serif',serif;
+  font-style:italic;
+  color:var(--terracotta);
+  font-weight:400;
+}
+.lede{
+  font-size:1.18rem;line-height:1.7;
+  color:var(--ink-soft);max-width:var(--measure);
+  font-weight:300;
+}
+.lede em{font-family:'Instrument Serif',serif;color:var(--terracotta-deep)}
+.margin-note{
+  font-family:'Caveat',cursive;
+  font-size:1.35rem;color:var(--terracotta);
+  line-height:1.1;transform:rotate(-2.5deg);
+  display:inline-block;
+}
+
+/* hand-drawn divider */
+.flourish{display:flex;justify-content:center;margin:90px 0 60px;opacity:.55}
+.flourish svg{width:180px;height:24px;overflow:visible}
+.flourish path,.flourish circle{stroke:var(--terracotta);fill:none;stroke-width:1.2;stroke-linecap:round}
+.flourish .dot{fill:var(--terracotta);stroke:none}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  HERO — manuscript cover                                     */
+/* ─────────────────────────────────────────────────────────── */
+.hero{
+  min-height:100vh;
+  padding-top:180px;padding-bottom:60px;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  position:relative;overflow:hidden;
+}
+.hero-inner{max-width:1180px;margin:0 auto;width:100%;padding:0 42px}
+.hero-eyebrow{
+  font-family:'Inter',sans-serif;font-size:.74rem;
+  letter-spacing:.42em;text-transform:uppercase;
+  color:var(--ink-muted);
+  display:flex;align-items:center;gap:16px;margin-bottom:40px;
+}
+.hero-eyebrow .dash{width:42px;height:1px;background:var(--terracotta);opacity:.6}
+.hero-eyebrow .neurips{
+  font-family:'Instrument Serif',serif;
+  font-style:italic;text-transform:none;letter-spacing:.02em;
+  color:var(--terracotta);font-size:.92rem;
+}
+
+.hero-title{
+  font-family:'Fraunces',serif;
+  font-weight:300;
+  font-size:var(--f-display);
+  line-height:.95;letter-spacing:-.035em;
+  color:var(--ink);
+  margin-bottom:30px;
+  max-width:16ch;
+  font-variation-settings:"SOFT" 100,"WONK" 1;
+}
+.hero-title .bench{
+  font-weight:500;
+  color:var(--terracotta-deep);
+}
+.hero-title .and{
+  font-family:'Instrument Serif',serif;
+  font-style:italic;font-weight:400;
+  color:var(--ochre);
+  font-size:.85em;
+}
+.hero-sub{
+  font-family:'Instrument Serif',serif;
+  font-style:italic;
+  font-size:clamp(1.15rem,1.9vw,1.55rem);
+  color:var(--ink-soft);
+  max-width:42ch;line-height:1.45;
+  margin-bottom:46px;
+}
+.hero-sub .u{
+  background:linear-gradient(to top, var(--ochre-wash) 38%, transparent 38%);
+  padding:0 2px;
+}
+
+.hero-meta{
+  display:flex;gap:34px;flex-wrap:wrap;align-items:center;
+  font-family:'Inter',sans-serif;font-size:.78rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-muted);margin-bottom:54px;
+}
+.hero-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--terracotta);opacity:.5}
+
+.hero-cta{display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.btn{
+  font-family:'Inter',sans-serif;
+  font-size:.82rem;letter-spacing:.18em;
+  text-transform:uppercase;font-weight:500;
+  padding:14px 28px;border-radius:2px;
+  text-decoration:none;cursor:pointer;border:none;
+  transition:transform .3s ease, box-shadow .3s ease;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.btn-primary{
+  background:var(--terracotta);color:var(--paper-light);
+  box-shadow:0 1px 0 rgba(0,0,0,.1), 0 8px 22px rgba(122,16,34,.18);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(0,0,0,.1), 0 14px 32px rgba(122,16,34,.28)}
+.btn-ghost{
+  background:transparent;color:var(--ink-soft);
+  border:1px solid var(--paper-edge);
+}
+.btn-ghost:hover{background:var(--paper-light);color:var(--terracotta);border-color:var(--terracotta-wash)}
+.btn .arr{transition:transform .3s ease;display:inline-block}
+.btn:hover .arr{transform:translateX(3px)}
+
+/* scroll invitation */
+.hero-scroll{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-family:'Caveat',cursive;
+  color:var(--ink-muted);font-size:1.1rem;
+  opacity:.8;
+}
+.hero-scroll .stem{
+  width:1px;height:34px;background:var(--terracotta);opacity:.45;
+  animation:drip 2.8s ease-in-out infinite;transform-origin:top;
+}
+@keyframes drip{
+  0%,100%{transform:scaleY(1);opacity:.4}
+  50%{transform:scaleY(1.35);opacity:.75}
+}
+
+/* watercolor marks floating behind hero */
+.hero-washes{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.wash{position:absolute;border-radius:50%;filter:blur(42px);opacity:.5}
+.wash-1{width:420px;height:360px;top:-60px;right:-80px;
+  background:radial-gradient(circle at 40% 40%, var(--terracotta-wash), transparent 70%)}
+.wash-2{width:360px;height:360px;bottom:-120px;left:-80px;
+  background:radial-gradient(circle at 60% 40%, var(--sage-wash), transparent 70%)}
+.wash-3{width:280px;height:280px;top:40%;right:18%;
+  background:radial-gradient(circle at 50% 50%, var(--ochre-wash), transparent 70%);opacity:.35}
+
+/* tiny pressed-flower illustration */
+.hero-sprig{
+  position:absolute;top:22%;right:6%;width:190px;height:260px;
+  opacity:.75;pointer-events:none;
+}
+@media (max-width:960px){.hero-sprig{display:none}}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  PRELUDE                                                     */
+/* ─────────────────────────────────────────────────────────── */
+.prelude{padding-top:40px}
+.prelude-grid{
+  display:grid;grid-template-columns:1fr 1.6fr;gap:80px;align-items:start;
+}
+@media (max-width:900px){.prelude-grid{grid-template-columns:1fr;gap:30px}}
+.prelude p{
+  font-size:1.12rem;line-height:1.8;color:var(--ink-soft);
+  margin-bottom:18px;
+}
+.prelude p em,.prelude p i{
+  font-family:'Instrument Serif',serif;color:var(--terracotta-deep);font-style:italic;
+}
+.prelude-aside{
+  font-family:'Caveat',cursive;font-size:1.32rem;
+  color:var(--ink-muted);line-height:1.4;
+  border-left:2px solid var(--terracotta-wash);
+  padding-left:22px;transform:rotate(-.6deg);
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  CAPABILITIES — five quiet virtues                           */
+/* ─────────────────────────────────────────────────────────── */
+.caps-head{max-width:var(--measure);margin-bottom:60px}
+.caps-grid{
+  display:grid;grid-template-columns:repeat(6, 1fr);gap:26px;
+}
+.cap{
+  position:relative;padding:34px 28px 30px;
+  background:linear-gradient(180deg, var(--paper-light) 0%, var(--paper) 100%);
+  border:1px solid var(--paper-edge);
+  border-radius:3px;
+  box-shadow:0 1px 0 rgba(0,0,0,.02), 0 20px 40px -30px rgba(60,40,28,.25);
+  transition:transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease;
+  overflow:hidden;
+}
+.cap::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--accent,var(--terracotta));opacity:.85;
+}
+.cap-1{--accent:var(--terracotta); grid-column:span 3}
+.cap-2{--accent:var(--sage);       grid-column:span 3}
+.cap-3{--accent:var(--ochre);      grid-column:span 2}
+.cap-4{--accent:var(--plum);       grid-column:span 2}
+.cap-5{--accent:var(--forest);     grid-column:span 2}
+@media (max-width:900px){
+  .caps-grid{grid-template-columns:1fr 1fr}
+  .cap-1,.cap-2,.cap-3,.cap-4,.cap-5{grid-column:span 1}
+  .cap-5{grid-column:span 2}
+}
+@media (max-width:560px){
+  .caps-grid{grid-template-columns:1fr}
+  .cap-1,.cap-2,.cap-3,.cap-4,.cap-5{grid-column:span 1}
+}
+.cap:hover{transform:translateY(-4px) rotate(-.3deg);
+  box-shadow:0 1px 0 rgba(0,0,0,.02), 0 28px 50px -28px rgba(60,40,28,.35)}
+
+.cap-num{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:.9rem;color:var(--accent,var(--terracotta));
+  letter-spacing:.05em;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.cap-num::after{content:"";flex:1;height:1px;background:var(--accent);opacity:.25}
+/* typographic glyph — replaces the icon; each capability gets one hand-set letter */
+.cap-glyph{
+  margin-bottom:20px;
+  font-family:'Fraunces',serif;font-weight:300;font-style:italic;
+  font-size:3.6rem;line-height:1;letter-spacing:-.02em;
+  color:var(--accent,var(--terracotta));
+  opacity:.92;
+  position:relative;display:inline-block;
+}
+.cap-glyph::after{
+  content:"";position:absolute;left:0;bottom:-6px;
+  width:28px;height:1px;background:currentColor;opacity:.35;
+}
+.cap h3{
+  font-family:'Fraunces',serif;font-weight:500;
+  font-size:1.25rem;line-height:1.25;letter-spacing:-.01em;
+  margin-bottom:10px;color:var(--ink);
+}
+.cap h3 em{font-family:'Instrument Serif',serif;font-weight:400;color:var(--accent)}
+.cap p{font-size:.96rem;line-height:1.6;color:var(--ink-muted);font-family:'Fraunces',serif}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ENSEMBLE — the five agents as a cast                        */
+/* ─────────────────────────────────────────────────────────── */
+.ensemble{background:linear-gradient(180deg, transparent 0%, var(--paper-deep) 30%, var(--paper-deep) 70%, transparent 100%)}
+.ensemble-head{display:flex;justify-content:space-between;align-items:end;gap:40px;flex-wrap:wrap;margin-bottom:70px}
+.ensemble-head .lede{max-width:46ch}
+.cast{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:22px;
+}
+@media (max-width:960px){.cast{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.cast{grid-template-columns:1fr}}
+
+.actor{
+  position:relative;padding:30px 24px 28px;
+  background:var(--paper-light);
+  border:1px solid var(--paper-edge);
+  border-radius:2px;
+  box-shadow:0 18px 36px -26px rgba(60,40,28,.4);
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);
+}
+.actor:nth-child(odd){transform:rotate(-1.1deg)}
+.actor:nth-child(even){transform:rotate(.9deg)}
+.actor:hover{transform:rotate(0) translateY(-6px) scale(1.02)}
+.actor::before{
+  /* thumbtack */
+  content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+  width:11px;height:11px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, var(--terracotta-soft), var(--terracotta-deep) 80%);
+  box-shadow:0 2px 3px rgba(0,0,0,.18);
+}
+/* serif-italic monogram avatar — hand-set roman numeral for each agent */
+.actor-mono{
+  width:64px;height:64px;margin:6px auto 18px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;
+  font-size:2.25rem;line-height:1;
+  color:var(--acc);
+  letter-spacing:-.02em;
+}
+/* single fine circular line beneath each monogram — a pressed stamp */
+.actor-mono::before{
+  content:"";position:absolute;inset:auto 0 -6px 0;
+  height:1px;width:38px;margin:0 auto;
+  background:currentColor;opacity:.35;
+}
+.actor-mono::after{
+  content:"·";position:absolute;inset:auto 0 -18px 0;
+  text-align:center;font-family:'Fraunces',serif;font-size:1rem;
+  color:currentColor;opacity:.4;
+}
+
+.actor-role{
+  font-family:'Inter',sans-serif;font-size:.7rem;
+  letter-spacing:.24em;text-transform:uppercase;
+  color:var(--acc);text-align:center;margin-bottom:8px;
+}
+.actor-name{
+  font-family:'Fraunces',serif;font-weight:500;
+  font-size:1.1rem;text-align:center;color:var(--ink);margin-bottom:14px;
+}
+.actor-name em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--acc)}
+.actor-desc{
+  font-size:.9rem;line-height:1.55;color:var(--ink-muted);
+  text-align:center;font-family:'Fraunces',serif;
+}
+.actor-1{--acc:#8B5C3A;--acc-wash:#EEDDCC}
+.actor-2{--acc:#276B5D;--acc-wash:#D4E2DE}
+.actor-3{--acc:#9B7520;--acc-wash:#EFDFC1}
+.actor-4{--acc:#5D3A7A;--acc-wash:#DFD3E8}
+.actor-5{--acc:#3D7A3D;--acc-wash:#D4E5D3}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  LIFECYCLE — the five-stage path                             */
+/* ─────────────────────────────────────────────────────────── */
+.lifecycle-head{max-width:var(--measure);margin-bottom:60px}
+.path{
+  position:relative;padding:20px 0 40px;
+  display:grid;grid-template-columns:1fr;gap:0;
+}
+.path::before{
+  content:"";
+  position:absolute;left:31px;top:10px;bottom:10px;
+  width:1.5px;
+  background:repeating-linear-gradient(
+    to bottom,
+    var(--terracotta) 0 6px,
+    transparent 6px 12px
+  );
+  opacity:.45;
+}
+.stage{
+  display:grid;
+  grid-template-columns:64px 1fr;
+  gap:30px;align-items:start;
+  padding:22px 0 34px;
+  position:relative;
+}
+.stage-badge{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--paper-light);
+  border:1.5px solid var(--terracotta-wash);
+  display:grid;place-items:center;
+  position:relative;z-index:1;
+  transition:transform .4s ease;
+}
+.stage-badge::before{
+  content:"";position:absolute;inset:6px;border-radius:50%;
+  background:var(--paper);
+  border:1px dashed var(--terracotta-wash);
+}
+.stage-badge span{
+  position:relative;z-index:1;
+  font-family:'Instrument Serif',serif;font-style:italic;
+  color:var(--terracotta);font-size:1.35rem;
+}
+.stage:hover .stage-badge{transform:scale(1.08) rotate(-6deg)}
+
+.stage-body h4{
+  font-family:'Fraunces',serif;font-weight:500;
+  font-size:1.38rem;line-height:1.25;letter-spacing:-.01em;
+  margin-bottom:8px;color:var(--ink);
+}
+.stage-body h4 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--terracotta)}
+.stage-body p{
+  font-size:1rem;line-height:1.7;color:var(--ink-soft);
+  max-width:58ch;
+}
+.stage-body .trace{
+  font-family:'Caveat',cursive;font-size:1.15rem;
+  color:var(--sage);margin-top:8px;opacity:.9;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  LEADERBOARD — still blooming                                */
+/* ─────────────────────────────────────────────────────────── */
+.leaderboard{background:linear-gradient(180deg, transparent 0%, var(--paper-deep) 20%, var(--paper-deep) 80%, transparent 100%)}
+.lb-head{
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;
+  align-items:center;margin-bottom:64px;
+}
+@media (max-width:820px){.lb-head{grid-template-columns:1fr;gap:30px}}
+.lb-head .lede{max-width:46ch}
+.lb-visual{
+  display:grid;place-items:center;position:relative;
+  min-height:280px;
+}
+.bloom-wrap{position:relative;width:260px;height:260px}
+.bloom-ring{position:absolute;inset:0;border-radius:50%;
+  border:1px dashed var(--terracotta-wash);animation:slow-spin 60s linear infinite}
+.bloom-ring.inner{inset:28px;border-color:var(--sage-soft);opacity:.55;animation-duration:40s;animation-direction:reverse}
+@keyframes slow-spin{to{transform:rotate(360deg)}}
+.bloom-center{position:absolute;inset:0;display:grid;place-items:center}
+
+.table-card{
+  background:var(--paper-light);
+  border:1px solid var(--paper-edge);border-radius:4px;
+  box-shadow:0 30px 60px -40px rgba(60,40,28,.35);
+  padding:26px 32px 36px;position:relative;
+}
+.table-card::before{
+  content:"";position:absolute;top:-8px;left:36px;
+  width:42px;height:14px;
+  background:repeating-linear-gradient(90deg, var(--ochre-wash) 0 6px, transparent 6px 10px);
+  opacity:.7;transform:rotate(-1.5deg);
+}
+.table-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;margin-bottom:18px;flex-wrap:wrap;
+}
+.table-head h3{
+  font-family:'Fraunces',serif;font-weight:500;
+  font-size:1.3rem;letter-spacing:-.01em;color:var(--ink);
+}
+.table-head h3 em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--terracotta);font-weight:400}
+.table-head .badge{
+  font-family:'Inter',sans-serif;font-size:.72rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--terracotta);
+  border:1px solid var(--terracotta-wash);
+  padding:6px 14px;border-radius:999px;
+  background:rgba(237,214,208,.35);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.badge .pulse{width:6px;height:6px;border-radius:50%;background:var(--terracotta);animation:breath 2.5s ease-in-out infinite}
+@keyframes breath{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:1;transform:scale(1.25)}}
+
+.lb-table{width:100%;border-collapse:collapse;font-family:'Fraunces',serif}
+.lb-table th{
+  text-align:left;font-weight:500;font-size:.74rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-muted);padding:14px 12px;
+  border-bottom:1px solid var(--paper-edge);
+  font-family:'Inter',sans-serif;
+}
+.lb-table th:last-child{text-align:right}
+.lb-table td{
+  padding:18px 12px;border-bottom:1px dashed var(--paper-edge);
+  font-size:.98rem;color:var(--ink-muted);vertical-align:middle;
+}
+.lb-table td:last-child{text-align:right}
+.lb-table tr:last-child td{border-bottom:none}
+.rank-dot{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;border-radius:50%;
+  background:var(--paper);border:1px dashed var(--ink-whisper);
+  font-family:'Instrument Serif',serif;font-style:italic;
+  color:var(--ink-whisper);font-size:.9rem;
+}
+.placeholder-line{
+  display:inline-block;height:10px;border-radius:3px;
+  background:repeating-linear-gradient(
+    90deg, var(--paper-edge) 0 4px, transparent 4px 8px);
+  opacity:.85;vertical-align:middle;
+}
+.note-row td{color:var(--ink-whisper);font-style:italic;font-size:.92rem;padding-top:22px}
+
+.table-foot{
+  display:flex;justify-content:space-between;gap:20px;
+  margin-top:22px;padding-top:18px;border-top:1px dashed var(--paper-edge);
+  font-family:'Inter',sans-serif;font-size:.76rem;
+  letter-spacing:.12em;color:var(--ink-whisper);
+  text-transform:uppercase;flex-wrap:wrap;
+}
+.table-foot .hand{font-family:'Caveat',cursive;text-transform:none;font-size:1.1rem;color:var(--sage);letter-spacing:0}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  CITE + FOOTER                                               */
+/* ─────────────────────────────────────────────────────────── */
+.cite-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start}
+@media (max-width:820px){.cite-grid{grid-template-columns:1fr;gap:30px}}
+.cite-card{
+  background:var(--paper-light);
+  border:1px solid var(--paper-edge);border-radius:3px;
+  padding:26px 28px;box-shadow:0 20px 40px -30px rgba(60,40,28,.3);
+  font-family:'JetBrains Mono','Fira Code',monospace;
+  font-size:.84rem;line-height:1.7;color:var(--ink-soft);
+  white-space:pre-wrap;position:relative;overflow:hidden;
+}
+.cite-card::before{
+  content:"BIBTEX";position:absolute;top:12px;right:14px;
+  font-family:'Inter',sans-serif;font-size:.62rem;
+  letter-spacing:.28em;color:var(--ink-whisper);
+}
+.cite-card .k{color:var(--terracotta)}
+.cite-card .v{color:var(--forest)}
+.cite-card .c{color:var(--ink-whisper);font-style:italic}
+
+.copy-btn{
+  margin-top:14px;
+  font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-muted);background:none;
+  border:none;cursor:pointer;padding:6px 0;
+  border-bottom:1px solid var(--paper-edge);transition:color .3s ease;
+}
+.copy-btn:hover{color:var(--terracotta);border-bottom-color:var(--terracotta)}
+
+footer{
+  padding:70px 42px 50px;
+  border-top:1px solid var(--paper-edge);
+  background:var(--paper);
+  margin-top:40px;
+}
+.foot{max-width:1160px;margin:0 auto;
+  display:flex;justify-content:space-between;gap:30px;align-items:end;flex-wrap:wrap}
+.foot-left{display:flex;flex-direction:column;gap:10px}
+.foot-title{
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:1.15rem;color:var(--ink-soft);
+}
+.foot-quote{
+  font-family:'Caveat',cursive;font-size:1.2rem;
+  color:var(--terracotta);line-height:1.2;max-width:32ch;
+}
+.foot-links{display:flex;gap:22px;font-family:'Inter',sans-serif;
+  font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-muted)}
+.foot-links a{color:inherit;text-decoration:none;transition:color .3s ease}
+.foot-links a:hover{color:var(--terracotta)}
+.foot-copy{font-family:'Inter',sans-serif;font-size:.7rem;color:var(--ink-whisper);letter-spacing:.14em;text-transform:uppercase}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Scroll-triggered gentle reveal                              */
+/* ─────────────────────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 1.1s ease, transform 1.1s cubic-bezier(.2,.8,.2,1)}
+.reveal.is-in{opacity:1;transform:translateY(0)}
+.reveal.delay-1{transition-delay:.08s}
+.reveal.delay-2{transition-delay:.16s}
+.reveal.delay-3{transition-delay:.24s}
+.reveal.delay-4{transition-delay:.32s}
+.reveal.delay-5{transition-delay:.40s}
+
+/* subtle hand-tremor on italic headings */
+@keyframes sway{0%,100%{transform:rotate(-.2deg)}50%{transform:rotate(.2deg)}}
+.hero-title .and{display:inline-block;animation:sway 7s ease-in-out infinite;transform-origin:center}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  GLIMPSE — journal spread with dark story-window            */
+/* ─────────────────────────────────────────────────────────── */
+.glimpse-head{max-width:var(--measure);margin-bottom:60px}
+
+/* the two-page notebook spread */
+.journal{
+  position:relative;
+  margin:0 auto;max-width:1080px;
+  display:grid;grid-template-columns:1fr 1.6fr;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.05) 0%, transparent 2%, transparent 49%, rgba(0,0,0,.12) 50%, transparent 51%, transparent 98%, rgba(0,0,0,.05) 100%),
+    linear-gradient(180deg, var(--paper-light) 0%, var(--paper) 100%);
+  border:1px solid var(--paper-edge);
+  border-radius:4px;
+  box-shadow:
+    0 1px 0 rgba(0,0,0,.06),
+    0 30px 60px -30px rgba(60,40,28,.5),
+    0 60px 100px -60px rgba(60,40,28,.35);
+  overflow:hidden;
+}
+.journal::before{
+  /* subtle spine shadow */
+  content:"";position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);
+  width:18px;background:
+    linear-gradient(90deg, transparent 0%, rgba(74,48,30,.15) 50%, transparent 100%);
+  pointer-events:none;z-index:1;
+}
+@media (max-width:820px){
+  .journal{grid-template-columns:1fr}
+  .journal::before{left:0;right:0;top:auto;bottom:50%;transform:translateY(50%);width:auto;height:18px;
+    background:linear-gradient(180deg, transparent 0%, rgba(74,48,30,.15) 50%, transparent 100%)}
+}
+
+/* left page — chapter mark, illustration, timestamp */
+.jrn-left{
+  padding:48px 40px;display:flex;flex-direction:column;gap:18px;
+  background:radial-gradient(400px 320px at 30% 20%, rgba(184,137,75,.1), transparent 70%);
+  position:relative;
+}
+.jrn-left::after{
+  /* page fold crease */
+  content:"";position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 28px, rgba(176,158,138,.12) 28px 29px);
+  pointer-events:none;opacity:.55;
+}
+.jrn-chapter{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  color:var(--terracotta);font-size:1rem;letter-spacing:.04em;
+}
+.jrn-title{
+  font-family:'Fraunces',serif;font-weight:400;
+  font-size:1.7rem;line-height:1.2;letter-spacing:-.01em;
+  color:var(--ink);
+}
+.jrn-title em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--terracotta)}
+.jrn-note{
+  font-family:'Caveat',cursive;font-size:1.2rem;color:var(--ink-muted);
+  line-height:1.45;margin-top:6px;
+}
+.jrn-stamp{
+  margin-top:auto;display:flex;align-items:center;gap:10px;
+  font-family:'Inter',sans-serif;font-size:.7rem;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--ink-whisper);
+}
+.jrn-stamp .stamp-mark{
+  width:44px;height:44px;border-radius:50%;
+  border:1.5px dashed var(--terracotta-wash);
+  display:grid;place-items:center;color:var(--terracotta);
+  font-family:'Instrument Serif',serif;font-style:italic;font-size:1rem;
+  position:relative;
+}
+.jrn-stamp .stamp-mark::before{
+  content:"";position:absolute;inset:4px;border-radius:50%;
+  border:1px dashed var(--terracotta-wash);
+}
+
+/* pressed leaves illustration on left page */
+.jrn-sprout{
+  width:140px;height:170px;margin:6px auto 10px;opacity:.78;
+}
+
+/* right page — story window */
+.jrn-right{
+  padding:44px 40px 40px;
+  display:flex;flex-direction:column;gap:18px;
+  position:relative;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/*  story window — matches the actual game's warm UI     */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* game palette tokens */
+:root{
+  --gm-paper:   #F7F0E3;     /* window bg */
+  --gm-paper2:  #EFE5D0;
+  --gm-ink:     #3c322c;     /* primary dialogue text */
+  --gm-ink-2:   #5a3e2e;     /* secondary / warmer brown */
+  --gm-ink-mut: #8a7f72;
+
+  --gm-sage-bg:     rgba(232,245,240,.95);
+  --gm-sage-border: rgba(125,184,162,.32);
+  --gm-sage-name:   #5a7a6e;
+  --gm-sage-shadow: 0 6px 18px rgba(94,168,144,.14);
+
+  --gm-peach-bg:     linear-gradient(135deg,#fdf0e8 0%,#f8e4d8 100%);
+  --gm-peach-border: rgba(232,168,152,.36);
+  --gm-peach-name:   #a86c57;
+  --gm-peach-shadow: 0 6px 18px rgba(200,136,122,.16);
+
+  --gm-gold-bg:     linear-gradient(135deg,rgba(244,237,214,.96),rgba(238,226,190,.92));
+  --gm-gold-border: rgba(173,142,86,.4);
+  --gm-gold-name:   #826535;
+  --gm-gold-shadow: 0 10px 26px rgba(173,142,86,.16);
+
+  --gm-shift-bg:     rgba(246,250,247,.98);
+  --gm-shift-border: rgba(125,184,162,.3);
+  --gm-shift-name:   #7d9c92;
+  --gm-shift-text:   #7f8a84;
+
+  --gm-avatar:      #2d2a26;
+  --gm-avatar-2:    #3a2f2b;
+  --gm-avatar-ink:  #F7F0E3;
+}
+
+.window-frame{
+  position:relative;aspect-ratio:4/5;
+  border-radius:22px;
+  background:
+    radial-gradient(420px 340px at 20% 14%, rgba(240,200,160,.35), transparent 65%),
+    radial-gradient(460px 420px at 85% 90%, rgba(125,184,162,.22), transparent 60%),
+    linear-gradient(175deg,var(--gm-paper) 0%,var(--gm-paper2) 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(90,62,46,.08),
+    inset 0 0 60px rgba(139,105,70,.08),
+    0 20px 40px -20px rgba(60,40,28,.4);
+  overflow:hidden;
+  color:var(--gm-ink);
+}
+/* subtle paper grain inside window */
+.window-frame::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .25  0 0 0 0 .16  0 0 0 .04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode:multiply;opacity:.7;
+}
+/* tiny live-session header strip */
+.window-frame::after{
+  content:"session · a lighthouse at dusk";
+  position:absolute;top:12px;left:0;right:0;text-align:center;
+  font-family:'Inter',sans-serif;font-size:.6rem;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--gm-ink-mut);opacity:.7;
+  z-index:1;pointer-events:none;
+}
+
+/* each scene layer */
+.scene{
+  position:absolute;inset:0;padding:44px 26px 26px;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;z-index:2;
+  animation-duration:36s;animation-iteration-count:infinite;animation-timing-function:ease-in-out;
+}
+/* 36s master cycle · timing: */
+/* M1 Title      0 - 4.5s   (  0 - 12.5%) */
+/* M2 Form     4.5 - 11.5s  (12.5 - 32%)  */
+/* M3 Stages  11.5 - 16s    (32 - 44%)    */
+/* M4 Dialog   16 - 28s     (44 - 78%)    ← the big one, 12s */
+/* M5 Shift    28 - 31.5s   (78 - 87.5%)  */
+/* M6 Artifact 31.5 - 36s   (87.5 - 100%) */
+@keyframes sc1{0%{opacity:0}2%{opacity:1}11%{opacity:1}13%,100%{opacity:0}}
+@keyframes sc2{0%,13%{opacity:0}15%{opacity:1}31%{opacity:1}33%,100%{opacity:0}}
+@keyframes sc3{0%,33%{opacity:0}35%{opacity:1}43%{opacity:1}45%,100%{opacity:0}}
+@keyframes sc4{0%,45%{opacity:0}47%{opacity:1}77%{opacity:1}79%,100%{opacity:0}}
+@keyframes sc5{0%,79%{opacity:0}81%{opacity:1}86%{opacity:1}88%,100%{opacity:0}}
+@keyframes sc6{0%,88%{opacity:0}90%{opacity:1}98%{opacity:1}99%,100%{opacity:0}}
+.scene-1{animation-name:sc1}
+.scene-2{animation-name:sc2}
+.scene-3{animation-name:sc3}
+.scene-4{animation-name:sc4}
+.scene-5{animation-name:sc5}
+.scene-6{animation-name:sc6}
+
+/* ——— Moment 1 · Welcome / Title ——— */
+.m1{justify-content:center;align-items:center;text-align:center;gap:14px;padding-top:54px}
+.m1-flower{position:relative;width:78px;height:78px;margin-bottom:2px}
+.m1-flower svg{width:100%;height:100%;animation:orbit 18s linear infinite}
+@keyframes orbit{to{transform:rotate(360deg)}}
+.m1-title{
+  font-family:'Fraunces',serif;font-weight:300;
+  font-size:clamp(2rem,4.6vw,2.8rem);letter-spacing:-.02em;
+  color:var(--gm-ink);
+}
+.m1-title span{color:var(--terracotta);font-style:italic;font-family:'Instrument Serif',serif;font-weight:400}
+.m1-sub{
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:.9rem;color:var(--gm-ink-mut);max-width:26ch;line-height:1.55;
+}
+.m1-btn{
+  margin-top:14px;
+  font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:.24em;
+  text-transform:uppercase;font-weight:600;color:#5a3e2e;
+  padding:12px 28px;border-radius:999px;
+  background:var(--gm-peach-bg);
+  border:1px solid var(--gm-peach-border);
+  box-shadow:var(--gm-peach-shadow);
+  animation:m1-btn-breath 36s ease infinite;
+}
+@keyframes m1-btn-breath{
+  0%,7%{transform:scale(1)}8%{transform:scale(1.04)}10%,100%{transform:scale(1)}
+}
+
+/* ——— Moment 2 · Emotional input form ——— */
+.m2{justify-content:center;align-items:center;gap:12px;padding-top:50px}
+.m2-card{
+  width:100%;max-width:320px;
+  background:linear-gradient(180deg,rgba(253,249,242,.96),rgba(245,237,222,.94));
+  border:1px solid rgba(90,62,46,.12);
+  border-radius:14px;padding:22px 20px;color:var(--gm-ink);
+  box-shadow:0 18px 42px -22px rgba(60,40,28,.3);
+}
+.m2-h{
+  font-family:'Fraunces',serif;font-weight:500;font-size:1rem;
+  text-align:center;margin-bottom:4px;color:var(--gm-ink);letter-spacing:-.01em;
+}
+.m2-sub{
+  font-family:'Fraunces',serif;font-style:italic;font-size:.76rem;
+  color:var(--gm-ink-mut);text-align:center;margin-bottom:14px;line-height:1.4;
+}
+.m2-input{
+  background:rgba(255,250,245,.9);
+  border:1px solid rgba(115,85,72,.22);
+  border-radius:10px;padding:12px 14px;
+  min-height:82px;font-family:'Fraunces',serif;font-size:.84rem;
+  color:var(--gm-ink);line-height:1.55;
+  position:relative;overflow:hidden;
+}
+.m2-input .typed{
+  display:inline-block;width:0;overflow:hidden;white-space:pre-wrap;
+  animation:m2-type 36s steps(70,end) infinite;
+}
+.m2-input .typed::after{
+  content:"";display:inline-block;width:1px;height:1em;
+  background:var(--terracotta);vertical-align:text-bottom;margin-left:1px;
+  animation:caret 1s steps(2) infinite;
+}
+@keyframes caret{50%{opacity:0}}
+/* M2 visible 13-33% of 36s cycle. Type between 15-28%, hold until fade. */
+@keyframes m2-type{
+  0%,15%   {width:0}
+  28%      {width:100%}
+  33%,100% {width:100%}
+}
+.m2-row{display:flex;justify-content:center;margin-top:14px}
+.m2-btn{
+  font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:.24em;
+  text-transform:uppercase;font-weight:600;color:#5a3e2e;
+  padding:10px 22px;border-radius:999px;
+  background:var(--gm-peach-bg);
+  border:1px solid var(--gm-peach-border);
+  box-shadow:var(--gm-peach-shadow);
+  animation:m2-btn-breath 36s ease infinite;
+}
+/* Pulse when typing finishes (~28% of cycle) */
+@keyframes m2-btn-breath{
+  0%,28%{transform:scale(1);box-shadow:var(--gm-peach-shadow)}
+  29%{transform:scale(1.05);box-shadow:0 12px 28px -6px rgba(200,136,122,.4)}
+  31%{transform:scale(1);box-shadow:var(--gm-peach-shadow)}
+  33%,100%{transform:scale(1)}
+}
+
+/* ——— Moment 3 · Weaving your story (five stages) ——— */
+.m3{justify-content:center;align-items:center;gap:18px;padding-top:56px}
+.m3-label{
+  font-family:'Inter',sans-serif;font-size:.62rem;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--gm-sage-name);
+  display:flex;align-items:center;gap:8px;
+}
+.m3-label::before,.m3-label::after{
+  content:"";width:20px;height:1px;background:currentColor;opacity:.35;
+}
+.m3-stages{
+  display:flex;flex-direction:column;gap:12px;width:100%;max-width:270px;
+}
+.m3-row{
+  display:flex;align-items:center;gap:12px;
+  font-family:'Fraunces',serif;font-size:.92rem;
+  color:var(--gm-ink-mut);
+  transition:color .5s ease;
+}
+.m3-row .roman{
+  width:22px;font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:.82rem;color:var(--gm-ink-mut);
+}
+.m3-row .dot{
+  width:11px;height:11px;border-radius:50%;
+  background:rgba(90,62,46,.12);
+  border:1px solid rgba(90,62,46,.22);
+  flex-shrink:0;
+}
+.m3-row .bar{
+  flex:1;height:1px;background:rgba(90,62,46,.12);
+  overflow:hidden;position:relative;
+}
+.m3-row .bar::after{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:0;
+  background:linear-gradient(90deg, transparent, #7db8a2, transparent);
+}
+/* Each row lights up sequentially inside M3 window (33-45% of 36s cycle). */
+.m3-r1{animation:m3-row-1 36s linear infinite}
+.m3-r2{animation:m3-row-2 36s linear infinite}
+.m3-r3{animation:m3-row-3 36s linear infinite}
+.m3-r4{animation:m3-row-4 36s linear infinite}
+.m3-r5{animation:m3-row-5 36s linear infinite}
+@keyframes m3-row-1{0%,34%{color:var(--gm-ink-mut)}35%,45%{color:var(--gm-ink)}47%,100%{color:var(--gm-ink-mut)}}
+@keyframes m3-row-2{0%,36%{color:var(--gm-ink-mut)}37%,45%{color:var(--gm-ink)}47%,100%{color:var(--gm-ink-mut)}}
+@keyframes m3-row-3{0%,38%{color:var(--gm-ink-mut)}39%,45%{color:var(--gm-ink)}47%,100%{color:var(--gm-ink-mut)}}
+@keyframes m3-row-4{0%,40%{color:var(--gm-ink-mut)}41%,45%{color:var(--gm-ink)}47%,100%{color:var(--gm-ink-mut)}}
+@keyframes m3-row-5{0%,42%{color:var(--gm-ink-mut)}43%,45%{color:var(--gm-ink)}47%,100%{color:var(--gm-ink-mut)}}
+
+.m3-r1 .dot{animation:m3-dot-1 36s linear infinite}
+.m3-r2 .dot{animation:m3-dot-2 36s linear infinite}
+.m3-r3 .dot{animation:m3-dot-3 36s linear infinite}
+.m3-r4 .dot{animation:m3-dot-4 36s linear infinite}
+.m3-r5 .dot{animation:m3-dot-5 36s linear infinite}
+@keyframes m3-dot-1{0%,34%{background:rgba(90,62,46,.12);box-shadow:none}35.5%,45%{background:#7db8a2;box-shadow:0 0 12px rgba(125,184,162,.7),0 0 3px #fff}47%,100%{background:rgba(125,184,162,.5);box-shadow:0 0 3px rgba(125,184,162,.4)}}
+@keyframes m3-dot-2{0%,36%{background:rgba(90,62,46,.12);box-shadow:none}37.5%,45%{background:#7db8a2;box-shadow:0 0 12px rgba(125,184,162,.7),0 0 3px #fff}47%,100%{background:rgba(125,184,162,.5);box-shadow:0 0 3px rgba(125,184,162,.4)}}
+@keyframes m3-dot-3{0%,38%{background:rgba(90,62,46,.12);box-shadow:none}39.5%,45%{background:#7db8a2;box-shadow:0 0 12px rgba(125,184,162,.7),0 0 3px #fff}47%,100%{background:rgba(125,184,162,.5);box-shadow:0 0 3px rgba(125,184,162,.4)}}
+@keyframes m3-dot-4{0%,40%{background:rgba(90,62,46,.12);box-shadow:none}41.5%,45%{background:#7db8a2;box-shadow:0 0 12px rgba(125,184,162,.7),0 0 3px #fff}47%,100%{background:rgba(125,184,162,.5);box-shadow:0 0 3px rgba(125,184,162,.4)}}
+@keyframes m3-dot-5{0%,42%{background:rgba(90,62,46,.12);box-shadow:none}43.5%,45%{background:#7db8a2;box-shadow:0 0 12px rgba(125,184,162,.7),0 0 3px #fff}47%,100%{background:rgba(125,184,162,.5);box-shadow:0 0 3px rgba(125,184,162,.4)}}
+
+.m3-r1 .bar::after{animation:m3-bar-1 36s linear infinite}
+.m3-r2 .bar::after{animation:m3-bar-2 36s linear infinite}
+.m3-r3 .bar::after{animation:m3-bar-3 36s linear infinite}
+.m3-r4 .bar::after{animation:m3-bar-4 36s linear infinite}
+.m3-r5 .bar::after{animation:m3-bar-5 36s linear infinite}
+@keyframes m3-bar-1{0%,34%{width:0}36%,45%{width:100%}47%,100%{width:100%;opacity:.4}}
+@keyframes m3-bar-2{0%,36%{width:0}38%,45%{width:100%}47%,100%{width:100%;opacity:.4}}
+@keyframes m3-bar-3{0%,38%{width:0}40%,45%{width:100%}47%,100%{width:100%;opacity:.4}}
+@keyframes m3-bar-4{0%,40%{width:0}42%,45%{width:100%}47%,100%{width:100%;opacity:.4}}
+@keyframes m3-bar-5{0%,42%{width:0}44%,45%{width:100%}47%,100%{width:100%;opacity:.4}}
+
+/* ——— Moment 4 · Dialogue with character avatars ——— */
+/* Window: 45-79% of 36s cycle → ~12 seconds of dialogue */
+.m4{gap:10px;padding:40px 22px 22px;justify-content:flex-start}
+
+/* narration caption strip (like the real game's "Story Reveal" / "Narration") */
+.m4-narration{
+  align-self:center;max-width:92%;
+  padding:8px 14px;border-radius:14px;
+  background:rgba(255,255,255,.6);
+  border:1px solid var(--gm-sage-border);
+  text-align:center;
+  animation:m4-narr 36s ease infinite;
+}
+.m4-narration .tag{
+  display:block;font-family:'Inter',sans-serif;font-size:.58rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gm-sage-name);font-weight:700;margin-bottom:3px;
+}
+.m4-narration .text{
+  font-family:'Fraunces',serif;font-style:italic;font-size:.76rem;
+  color:#6f7b75;line-height:1.5;
+}
+@keyframes m4-narr{
+  0%,45%{opacity:0;transform:translateY(4px)}
+  48%{opacity:1;transform:translateY(0)}
+  77%{opacity:1}
+  79%,100%{opacity:0}
+}
+
+/* chat rows */
+.m4-row{
+  display:flex;align-items:flex-end;gap:8px;width:100%;
+  opacity:0;
+}
+.m4-row.user{flex-direction:row-reverse}
+
+/* dark rounded-square avatar with initial (matches game code) */
+.m4-av{
+  flex-shrink:0;width:32px;height:32px;border-radius:8px;
+  background:var(--gm-avatar);
+  display:grid;place-items:center;
+  color:var(--gm-avatar-ink);
+  font-family:'Fraunces',serif;font-weight:500;font-size:.94rem;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.08);
+  position:relative;
+}
+.m4-av.user{background:var(--gm-avatar-2)}
+/* tiny online pulse dot */
+.m4-av::after{
+  content:"";position:absolute;bottom:-2px;right:-2px;
+  width:8px;height:8px;border-radius:50%;
+  background:#7db8a2;border:1.5px solid var(--gm-paper);
+  opacity:0;
+}
+.m4-row.npc.active .m4-av::after{opacity:1;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.25);opacity:1}}
+
+/* bubble wrapper + name label */
+.m4-bubble-wrap{position:relative;max-width:78%;padding-top:14px}
+.m4-name{
+  position:absolute;top:0;font-family:'Inter',sans-serif;
+  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:700;line-height:1;
+}
+.m4-row.npc .m4-name{left:2px;color:var(--gm-sage-name)}
+.m4-row.user .m4-name{right:2px;color:var(--gm-peach-name)}
+.m4-row.reveal .m4-name{left:2px;color:var(--gm-gold-name)}
+
+/* bubble */
+.m4-bubble{
+  padding:9px 14px;font-family:'Fraunces',serif;
+  font-size:.82rem;line-height:1.5;color:var(--gm-ink-2);
+  position:relative;
+}
+.m4-row.npc    .m4-bubble{background:var(--gm-sage-bg);   border:1px solid var(--gm-sage-border);   box-shadow:var(--gm-sage-shadow);   border-radius:1.1rem 1.1rem 1.1rem .35rem}
+.m4-row.user   .m4-bubble{background:var(--gm-peach-bg);  border:1px solid var(--gm-peach-border);  box-shadow:var(--gm-peach-shadow);  border-radius:1.1rem 1.1rem .35rem 1.1rem}
+.m4-row.reveal .m4-bubble{background:var(--gm-gold-bg);   border:1px solid var(--gm-gold-border);   box-shadow:var(--gm-gold-shadow);   border-radius:1.1rem 1.1rem 1.1rem .35rem;color:#5f4a2d}
+.m4-bubble em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--terracotta-deep)}
+
+/* row entry animations — sequenced within M4 visible window */
+.m4-r1{animation:m4-enter-1 36s ease infinite}
+.m4-r2{animation:m4-enter-2 36s ease infinite}
+.m4-r3{animation:m4-enter-3 36s ease infinite}
+/* r1 NPC enters at 51%, r2 user at 60%, r3 reveal at 69% */
+@keyframes m4-enter-1{
+  0%,50%{opacity:0;transform:translateY(8px) scale(.97)}
+  53%{opacity:1;transform:translateY(0) scale(1)}
+  77%{opacity:1}
+  79%,100%{opacity:0}
+}
+@keyframes m4-enter-2{
+  0%,59%{opacity:0;transform:translateY(8px) scale(.97)}
+  62%{opacity:1;transform:translateY(0) scale(1)}
+  77%{opacity:1}
+  79%,100%{opacity:0}
+}
+@keyframes m4-enter-3{
+  0%,68%{opacity:0;transform:translateY(8px) scale(.97)}
+  71%{opacity:1;transform:translateY(0) scale(1)}
+  77%{opacity:1}
+  79%,100%{opacity:0}
+}
+
+/* typing indicator "…" for npc before their bubble arrives */
+.m4-typing{
+  display:inline-flex;gap:3px;padding:6px 10px;border-radius:12px;
+  background:var(--gm-sage-bg);border:1px solid var(--gm-sage-border);
+  align-self:flex-start;margin-left:40px;
+}
+.m4-typing span{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--gm-sage-name);opacity:.5;
+  animation:dots 1.2s ease-in-out infinite;
+}
+.m4-typing span:nth-child(2){animation-delay:.2s}
+.m4-typing span:nth-child(3){animation-delay:.4s}
+@keyframes dots{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-3px);opacity:1}}
+
+.m4-typing{animation:m4-typing-show 36s ease infinite}
+@keyframes m4-typing-show{
+  0%,46%{opacity:0}
+  48%{opacity:1}
+  52%{opacity:1}
+  53%,100%{opacity:0}
+}
+
+/* choices */
+.m4-choices{
+  margin-top:auto;padding-top:4px;
+  display:flex;flex-direction:column;gap:5px;
+}
+.m4-choice{
+  padding:7px 12px;border-radius:8px;
+  background:rgba(255,255,255,.5);
+  border:1px solid rgba(125,184,162,.28);
+  font-family:'Fraunces',serif;font-size:.78rem;
+  color:var(--gm-ink);line-height:1.35;
+  display:flex;align-items:baseline;gap:8px;
+  opacity:0;
+}
+.m4-choice .mk{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  color:var(--terracotta);font-size:.84rem;flex-shrink:0;
+}
+.m4-c1{animation:m4-c-a 36s ease infinite}
+.m4-c2{animation:m4-c-b 36s ease infinite}
+.m4-c3{animation:m4-c-c 36s ease infinite}
+@keyframes m4-c-a{0%,72%{opacity:0;transform:translateX(-6px)}74%{opacity:1;transform:translateX(0)}77%{opacity:1}79%,100%{opacity:0}}
+@keyframes m4-c-b{0%,73%{opacity:0;transform:translateX(-6px)}75%{opacity:1;transform:translateX(0)}77%{opacity:1}79%,100%{opacity:0}}
+@keyframes m4-c-c{0%,74%{opacity:0;transform:translateX(-6px)}76%{opacity:1;transform:translateX(0)}77%{opacity:1}79%,100%{opacity:0}}
+
+/* ——— Moment 5 · Scene shift (matches real game caption) ——— */
+.m5{justify-content:center;align-items:center;text-align:center;position:relative}
+.m5::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 50%, rgba(60,40,28,.15) 100%);
+}
+.m5-pill{
+  position:relative;z-index:1;
+  display:inline-block;min-width:64%;max-width:92%;
+  padding:14px 24px;border-radius:18px;
+  background:var(--gm-shift-bg);
+  border:1px solid var(--gm-shift-border);
+  box-shadow:0 10px 24px rgba(60,50,44,.1);
+  animation:m5-rise 36s ease infinite;
+}
+@keyframes m5-rise{
+  0%,80%{opacity:0;transform:translateY(8px) scale(.97)}
+  83%{opacity:1;transform:translateY(0) scale(1)}
+  86%{opacity:1}
+  88%,100%{opacity:0}
+}
+.m5-tag{
+  display:block;font-family:'Inter',sans-serif;font-size:.6rem;
+  letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gm-shift-name);font-weight:700;margin-bottom:4px;
+}
+.m5-text{
+  font-family:'Fraunces',serif;font-style:italic;font-size:.95rem;
+  color:var(--gm-shift-text);line-height:1.5;
+}
+.m5-sub{
+  position:relative;z-index:1;margin-top:16px;
+  font-family:'Caveat',cursive;font-size:1.1rem;
+  color:var(--terracotta);
+  animation:m5-sub 36s ease infinite;
+}
+@keyframes m5-sub{
+  0%,82%{opacity:0}85%{opacity:.85}87%{opacity:.85}88%,100%{opacity:0}
+}
+
+/* ——— Moment 6 · Artifact · folded letter unfurling ——— */
+.m6{justify-content:center;align-items:center;gap:14px;padding-top:50px}
+.m6-label{
+  font-family:'Inter',sans-serif;font-size:.6rem;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--gm-gold-name);font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.m6-label::before,.m6-label::after{content:"";width:18px;height:1px;background:currentColor;opacity:.4}
+.m6-letter{
+  position:relative;width:230px;height:160px;
+  background:linear-gradient(180deg,#fefaf0,#f2e8d0);
+  border:1px solid rgba(173,142,86,.4);border-radius:3px;
+  box-shadow:
+    0 16px 32px -12px rgba(173,142,86,.4),
+    inset 0 0 24px rgba(173,142,86,.08);
+  transform-style:preserve-3d;
+  animation:m6-unfold 36s ease infinite;
+}
+@keyframes m6-unfold{
+  0%,88%{transform:perspective(600px) rotateX(88deg) scale(.85);opacity:0}
+  90%{transform:perspective(600px) rotateX(55deg) scale(.92);opacity:1}
+  94%{transform:perspective(600px) rotateX(8deg) scale(1)}
+  98%{transform:perspective(600px) rotateX(6deg) scale(1);opacity:1}
+  100%{opacity:0}
+}
+.m6-letter::before{
+  content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  width:28px;height:28px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#B94B4B,#5B0A18);
+  box-shadow:0 3px 8px rgba(60,40,28,.35),inset 0 -2px 4px rgba(0,0,0,.25);
+}
+.m6-letter::after{
+  content:"N";position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  width:28px;height:28px;display:grid;place-items:center;
+  color:#F5EFE4;font-family:'Instrument Serif',serif;font-style:italic;font-size:.82rem;
+}
+.m6-inner{
+  padding:20px 18px 14px;
+  font-family:'Caveat',cursive;font-size:1rem;line-height:1.35;
+  color:#5B3A28;
+}
+.m6-inner .sig{display:block;margin-top:8px;text-align:right;font-size:.92rem;opacity:.85;color:var(--terracotta-deep)}
+
+/* ——— Scene indicator dots — one per moment ——— */
+.scene-dots{
+  display:flex;justify-content:center;gap:10px;margin-top:16px;
+}
+.scene-dots .d{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--paper-edge);
+  transition:all .4s ease;
+}
+.scene-dots .d:nth-child(1){animation:dot-1 36s ease infinite}
+.scene-dots .d:nth-child(2){animation:dot-2 36s ease infinite}
+.scene-dots .d:nth-child(3){animation:dot-3 36s ease infinite}
+.scene-dots .d:nth-child(4){animation:dot-4 36s ease infinite}
+.scene-dots .d:nth-child(5){animation:dot-5 36s ease infinite}
+.scene-dots .d:nth-child(6){animation:dot-6 36s ease infinite}
+@keyframes dot-1{0%,11%{background:var(--terracotta);transform:scale(1.7)}13%,100%{background:var(--paper-edge);transform:scale(1)}}
+@keyframes dot-2{0%,13%{background:var(--paper-edge)}15%,31%{background:var(--terracotta);transform:scale(1.7)}33%,100%{background:var(--paper-edge);transform:scale(1)}}
+@keyframes dot-3{0%,33%{background:var(--paper-edge)}35%,43%{background:var(--terracotta);transform:scale(1.7)}45%,100%{background:var(--paper-edge);transform:scale(1)}}
+@keyframes dot-4{0%,45%{background:var(--paper-edge)}47%,77%{background:var(--terracotta);transform:scale(1.7)}79%,100%{background:var(--paper-edge);transform:scale(1)}}
+@keyframes dot-5{0%,79%{background:var(--paper-edge)}81%,86%{background:var(--terracotta);transform:scale(1.7)}88%,100%{background:var(--paper-edge);transform:scale(1)}}
+@keyframes dot-6{0%,88%{background:var(--paper-edge)}90%,98%{background:var(--terracotta);transform:scale(1.7)}99%,100%{background:var(--paper-edge);transform:scale(1)}}
+
+.window-caption{
+  font-family:'Caveat',cursive;font-size:1.05rem;
+  color:var(--ink-muted);text-align:center;margin-top:10px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ARTIFACT GALLERY · teaser card (links to artifacts.html)
+   ══════════════════════════════════════════════════════════════ */
+.artifact-teaser{
+  margin-top:64px;
+  display:grid;grid-template-columns:1.1fr .9fr;gap:42px 54px;align-items:center;
+  padding:34px 36px;
+  border:1px solid var(--paper-edge);
+  border-radius:4px;
+  background:
+    radial-gradient(380px 220px at 100% 0%, rgba(238,214,208,.45), transparent 70%),
+    linear-gradient(180deg, var(--paper-light) 0%, var(--paper) 100%);
+  box-shadow:0 14px 30px -22px rgba(60,40,28,.28);
+  position:relative;
+}
+.artifact-teaser::before{
+  content:"";position:absolute;top:-1px;left:-1px;width:22px;height:22px;
+  border-top:1px solid var(--terracotta);border-left:1px solid var(--terracotta);
+  opacity:.45;
+}
+.artifact-teaser::after{
+  content:"";position:absolute;bottom:-1px;right:-1px;width:22px;height:22px;
+  border-bottom:1px solid var(--terracotta);border-right:1px solid var(--terracotta);
+  opacity:.45;
+}
+@media (max-width:840px){
+  .artifact-teaser{grid-template-columns:1fr;gap:24px;padding:26px 22px}
+}
+
+.at-text h3{
+  font-family:'Fraunces',serif;font-weight:400;font-size:1.6rem;
+  line-height:1.3;color:var(--ink);margin:8px 0 10px;letter-spacing:-.01em;
+}
+.at-text h3 em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--terracotta)}
+.at-text p{
+  font-size:.98rem;line-height:1.7;color:var(--ink-soft);margin-bottom:18px;
+}
+.at-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Inter',sans-serif;font-size:.78rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--terracotta-deep);
+  text-decoration:none;
+  padding:10px 18px;border:1px solid var(--terracotta);border-radius:99px;
+  transition:all .25s ease;
+}
+.at-cta:hover{background:var(--terracotta);color:var(--paper-light)}
+.at-cta .arr{font-family:'Instrument Serif',serif;font-style:italic;font-size:1rem;letter-spacing:0}
+
+.at-tiles{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+}
+.at-tile{
+  padding:14px 10px 12px;
+  background:var(--paper-light);
+  border:1px solid var(--paper-edge);
+  border-radius:3px;
+  text-align:center;
+  position:relative;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.at-tile:hover{transform:translateY(-2px);box-shadow:0 10px 18px -14px rgba(60,40,28,.3)}
+.at-tile:nth-child(1){transform:rotate(-1.2deg)}
+.at-tile:nth-child(2){transform:rotate(.8deg)}
+.at-tile:nth-child(3){transform:rotate(-.6deg)}
+.at-tile:nth-child(4){transform:rotate(1.4deg)}
+.at-tile:nth-child(5){transform:rotate(-1deg);grid-column:span 3}
+.at-tile:hover:nth-child(1){transform:rotate(-1.2deg) translateY(-2px)}
+.at-tile:hover:nth-child(2){transform:rotate(.8deg) translateY(-2px)}
+.at-tile:hover:nth-child(3){transform:rotate(-.6deg) translateY(-2px)}
+.at-tile:hover:nth-child(4){transform:rotate(1.4deg) translateY(-2px)}
+.at-tile:hover:nth-child(5){transform:rotate(-1deg) translateY(-2px)}
+.at-tile .at-no{
+  display:block;font-family:'Instrument Serif',serif;font-style:italic;
+  color:var(--terracotta);font-size:1rem;line-height:1;margin-bottom:4px;
+  letter-spacing:.04em;
+}
+.at-tile .at-name{
+  display:block;font-family:'Fraunces',serif;font-size:.78rem;color:var(--ink);
+  line-height:1.3;letter-spacing:-.005em;
+}
+.at-tile .at-name em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--terracotta-deep)}
+.at-tile-more{
+  background:transparent;border-style:dashed;
+}
+.at-tile-more .at-name{color:var(--ink-muted);font-style:italic}
+
+/* selection */
+::selection{background:var(--terracotta-wash);color:var(--terracotta-deep)}
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+  .reveal{opacity:1;transform:none}
+}
+
+/* keyboard focus */
+a:focus-visible,button:focus-visible{
+  outline:2px solid var(--terracotta);
+  outline-offset:3px;
+  border-radius:2px;
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     NAVIGATION
+     ════════════════════════════════════════════════════════════ -->
+<nav>
+  <a href="#top" class="mark">
+    <span class="mark-seal"></span>
+    <span class="mark-title">Narra<span style="color:var(--terracotta)">·</span>Gym</span>
+  </a>
+  <div class="nav-links">
+    <a href="#prelude">Prelude</a>
+    <a href="#capabilities">Capabilities</a>
+    <a href="#ensemble">Ensemble</a>
+    <a href="#lifecycle">Lifecycle</a>
+    <a href="#glimpse">Glimpse</a>
+    <a href="#leaderboard">Leaderboard</a>
+    <a href="#cite">Cite</a>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- ════════════════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-washes">
+    <div class="wash wash-1"></div>
+    <div class="wash wash-2"></div>
+    <div class="wash wash-3"></div>
+  </div>
+
+  <!-- hand-drawn pressed sprig -->
+  <svg class="hero-sprig" viewBox="0 0 190 260" fill="none" aria-hidden="true">
+    <g stroke="#7A1022" stroke-width="1.1" stroke-linecap="round" opacity=".55">
+      <path d="M95 10 C 96 60, 92 120, 98 240"/>
+      <!-- leaves left -->
+      <path d="M96 40 C 80 42, 65 55, 58 72 C 72 70, 88 62, 96 50 Z" fill="#7A1022" fill-opacity=".08"/>
+      <path d="M96 85 C 78 88, 62 104, 56 122 C 72 120, 90 108, 97 96 Z" fill="#6B8E6F" fill-opacity=".1" stroke="#6B8E6F"/>
+      <path d="M97 140 C 80 144, 66 158, 60 176 C 76 172, 92 160, 98 150 Z" fill="#B8894B" fill-opacity=".1" stroke="#B8894B"/>
+      <!-- leaves right -->
+      <path d="M96 60 C 112 62, 128 74, 134 92 C 120 90, 104 82, 96 72 Z" fill="#6B8E6F" fill-opacity=".1" stroke="#6B8E6F"/>
+      <path d="M97 110 C 114 114, 130 128, 136 146 C 120 144, 104 132, 97 122 Z" fill="#7A1022" fill-opacity=".08"/>
+      <path d="M98 170 C 114 174, 128 188, 134 204 C 120 202, 104 190, 98 180 Z" fill="#5D3A7A" fill-opacity=".08" stroke="#5D3A7A"/>
+      <!-- small blossom -->
+      <circle cx="95" cy="14" r="6" fill="#7A1022" fill-opacity=".15" stroke="#7A1022"/>
+      <circle cx="95" cy="14" r="2" fill="#7A1022" stroke="none"/>
+    </g>
+  </svg>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow reveal">
+      <span class="dash"></span>
+      <span class="neurips">NeurIPS 2026 · Evaluations &amp; Datasets Track</span>
+    </div>
+
+    <h1 class="hero-title reveal delay-1">
+      In Character,<br/>
+      <span class="and">&amp;</span> In Context<span style="color:var(--terracotta)">.</span>
+    </h1>
+
+    <p class="hero-sub reveal delay-2">
+      <span class="u">Narra&middot;Gym</span> is a quiet evaluation environment for large language models
+      asked to hold a story in their hands —
+      to <i>listen</i>, to <i>remember</i>, to <i>care</i>, and to keep the world alive across many turns.
+    </p>
+
+    <div class="hero-meta reveal delay-3">
+      <span>Five Capabilities</span>
+      <span class="dot"></span>
+      <span>Five Agent Roles</span>
+      <span class="dot"></span>
+      <span>Five-Stage Lifecycle</span>
+    </div>
+
+    <div class="hero-cta reveal delay-4">
+      <a class="btn btn-primary" href="#prelude">
+        Begin reading <span class="arr">→</span>
+      </a>
+      <a class="btn btn-ghost" href="#cite">
+        The paper <span class="arr">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>turn the page</span>
+    <span class="stem"></span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     PRELUDE (abstract rewritten softly)
+     ════════════════════════════════════════════════════════════ -->
+<section id="prelude" class="prelude">
+  <div class="container">
+    <div class="flourish" aria-hidden="true">
+      <svg viewBox="0 0 180 24">
+        <path d="M2 12 C 40 2, 60 22, 90 12 S 140 2, 178 12"/>
+        <circle cx="90" cy="12" r="2.2" class="dot"/>
+      </svg>
+    </div>
+
+    <div class="prelude-grid">
+      <div class="reveal">
+        <div class="eyebrow"><span class="numeral">i.</span> Prelude</div>
+        <h2 class="section-title">
+          A story is not a <em>single prompt</em>.<br/>
+          It is a quiet conversation.
+        </h2>
+        <p class="prelude-aside">
+          most benchmarks ask<br/>
+          a model to answer.<br/>
+          ours asks it to <i>stay</i>.
+        </p>
+      </div>
+
+      <div class="reveal delay-1">
+        <p>
+          Existing LLM benchmarks emphasize static prompting — a single question, a single answer —
+          and therefore <em>under-measure</em> the capabilities required for long-horizon interactive storytelling.
+        </p>
+        <p>
+          <strong style="font-weight:500;color:var(--terracotta-deep)">Narra&middot;Gym</strong>
+          is an executable <em>evaluation environment</em> for testing LLMs as interactive narrative agents along
+          five coupled dimensions: <i>creative story generation</i>, <i>long-context state tracking</i>,
+          <i>character simulation</i>, <i>empathic personalization</i>,
+          and <i>story-grounded interactive artifact generation</i>.
+        </p>
+        <p>
+          Inside a live interaction loop, the environment orchestrates five-stage story construction,
+          multi-resolution narrative memory, reflection-guided planning, anti-stagnation control,
+          novelty-constrained artifact synthesis, and fail-soft structured generation. Together, these choices
+          turn interactive storytelling from a loosely specified demo into a <em>reproducible Gym</em>
+          for studying persistent, emotionally aware, story-driven language agents.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     CAPABILITIES
+     ════════════════════════════════════════════════════════════ -->
+<section id="capabilities">
+  <div class="container">
+    <div class="caps-head reveal">
+      <div class="eyebrow"><span class="numeral">ii.</span> Five Quiet Capabilities</div>
+      <h2 class="section-title">
+        What we ask a model <em>to hold</em>, when we ask it to tell a story.
+      </h2>
+      <p class="lede">
+        Narra&middot;Gym doesn't test isolated competence. It tests whether a model can
+        live inside a story — <em>creative, attentive, in-character, empathic, tangible</em> —
+        for as long as the reader needs it to.
+      </p>
+    </div>
+
+    <div class="caps-grid">
+
+      <!-- 1 · Creative Story Generation -->
+      <article class="cap cap-1 reveal delay-1">
+        <div class="cap-num">i. <span>Creative</span></div>
+        <div class="cap-glyph">I</div>
+        <h3>Creative <em>Story Generation</em></h3>
+        <p>Build a multi-stage narrative from sparse emotional input: premise, setting, characters, acts, and the opening scene — fluent, novel, dramatically structured.</p>
+      </article>
+
+      <!-- 2 · Long-Context Management -->
+      <article class="cap cap-2 reveal delay-2">
+        <div class="cap-num">ii. <span>Memory</span></div>
+        <div class="cap-glyph">II</div>
+        <h3>Long-Context <em>Management</em></h3>
+        <p>Preserve consistency across many turns — unresolved tensions, revealed clues, scene transitions, and user decisions remain quietly available as actionable context.</p>
+      </article>
+
+      <!-- 3 · Character Simulation -->
+      <article class="cap cap-3 reveal delay-3">
+        <div class="cap-num">iii. <span>Voice</span></div>
+        <div class="cap-glyph">III</div>
+        <h3>Character <em>Simulation</em></h3>
+        <p>Keep voices stable, distinguishable, and situationally appropriate while they still evolve with the plot.</p>
+      </article>
+
+      <!-- 4 · User Empathy -->
+      <article class="cap cap-4 reveal delay-4">
+        <div class="cap-num">iv. <span>Empathy</span></div>
+        <div class="cap-glyph">IV</div>
+        <h3>User <em>Empathy</em></h3>
+        <p>Infer emotional context, align narrative developments with the reader's underlying concerns — without collapsing into generic therapeutic language.</p>
+      </article>
+
+      <!-- 5 · Interactive Artifacts -->
+      <article class="cap cap-5 reveal delay-5">
+        <div class="cap-num">v. <span>Artifact</span></div>
+        <div class="cap-glyph">V</div>
+        <h3>Interactive <em>Artifact Generation</em></h3>
+        <p>Decide when a letter, a map, a cipher, a radio dial belongs in the story — and then shape it into a tangible, interactive prop grounded in the narrative.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     ENSEMBLE
+     ════════════════════════════════════════════════════════════ -->
+<section id="ensemble" class="ensemble">
+  <div class="container">
+
+    <div class="flourish" aria-hidden="true">
+      <svg viewBox="0 0 180 24">
+        <path d="M2 12 H 80"/><circle cx="90" cy="12" r="3" class="dot"/>
+        <path d="M100 12 H 178"/>
+      </svg>
+    </div>
+
+    <div class="ensemble-head">
+      <div class="reveal">
+        <div class="eyebrow"><span class="numeral">iii.</span> The Ensemble</div>
+        <h2 class="section-title">Five agents, <em>each with a quiet duty.</em></h2>
+      </div>
+      <p class="lede reveal delay-1">
+        Each turn is orchestrated by a small company of named roles.
+        Together they build the world, hold the thread, keep the plot honest,
+        imagine what comes next, and give the story something the reader can touch.
+      </p>
+    </div>
+
+    <div class="cast">
+
+      <article class="actor actor-1 reveal delay-1">
+        <div class="actor-mono">I</div>
+        <div class="actor-role">Act &middot; I</div>
+        <div class="actor-name">Narrative <em>Architect</em></div>
+        <p class="actor-desc">Gathers sparse emotional input and builds a whole world — premise, setting, cast, act structure, and opening scene.</p>
+      </article>
+
+      <article class="actor actor-2 reveal delay-2">
+        <div class="actor-mono">II</div>
+        <div class="actor-role">Act &middot; II</div>
+        <div class="actor-name">Memory <em>Agent</em></div>
+        <p class="actor-desc">Keeps three temporal resolutions of the story — the verbatim now, rolling summaries, and the latent state that lasts forever.</p>
+      </article>
+
+      <article class="actor actor-3 reveal delay-3">
+        <div class="actor-mono">III</div>
+        <div class="actor-role">Act &middot; III</div>
+        <div class="actor-name">Pacing <em>Agent</em></div>
+        <p class="actor-desc">Watches for eloquent stalling. Escalates from gentle nudge to mandatory shift when the plot is only pretending to move.</p>
+      </article>
+
+      <article class="actor actor-4 reveal delay-4">
+        <div class="actor-mono">IV</div>
+        <div class="actor-role">Act &middot; IV</div>
+        <div class="actor-name">Planning <em>Agent</em></div>
+        <p class="actor-desc">Reflects before each turn — unresolved tensions, user interests, pacing, and where the story ought to go next.</p>
+      </article>
+
+      <article class="actor actor-5 reveal delay-5">
+        <div class="actor-mono">V</div>
+        <div class="actor-role">Act &middot; V</div>
+        <div class="actor-name">Artifact <em>Agent</em></div>
+        <p class="actor-desc">Shapes story state into letters, maps, ciphers, radio dials — and refuses to repeat itself through tag-based novelty filtering.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     LIFECYCLE
+     ════════════════════════════════════════════════════════════ -->
+<section id="lifecycle">
+  <div class="container">
+    <div class="lifecycle-head reveal">
+      <div class="eyebrow"><span class="numeral">iv.</span> How a story begins</div>
+      <h2 class="section-title">A <em>five-stage</em> path from feeling to opening scene.</h2>
+      <p class="lede">
+        Before a single turn, the agent moves through a logged lifecycle so researchers can pinpoint
+        exactly where things bloomed — or wilted.
+      </p>
+    </div>
+
+    <div class="path">
+      <div class="stage reveal delay-1">
+        <div class="stage-badge"><span>i</span></div>
+        <div class="stage-body">
+          <h4>Story <em>Foundation</em></h4>
+          <p>Title, premise, theme, emotional undercurrent, and protagonist objective — the narrative seed, separate from its later realization.</p>
+          <div class="trace">— the quiet ache that the story will answer</div>
+        </div>
+      </div>
+
+      <div class="stage reveal delay-2">
+        <div class="stage-badge"><span>ii</span></div>
+        <div class="stage-body">
+          <h4>Setting <em>Construction</em></h4>
+          <p>A world and a scene frame, translating emotional context into a concrete place — not decorative metadata, but runtime state for tracking continuity.</p>
+          <div class="trace">— a room the feeling can walk into</div>
+        </div>
+      </div>
+
+      <div class="stage reveal delay-3">
+        <div class="stage-badge"><span>iii</span></div>
+        <div class="stage-body">
+          <h4>Character <em>Construction</em></h4>
+          <p>Protagonist and supporting cast, each with backstory, personality, and speech style. Names are normalized into stable identifiers for later attribution.</p>
+          <div class="trace">— someone the reader will recognize, even in the dark</div>
+        </div>
+      </div>
+
+      <div class="stage reveal delay-4">
+        <div class="stage-badge"><span>iv</span></div>
+        <div class="stage-body">
+          <h4>Act <em>Structure</em></h4>
+          <p>A multi-act outline refined through a critic-then-refiner loop. The critic scores novelty, tension, and pacing; the refiner rewrites weak acts. Failures fall back softly.</p>
+          <div class="trace">— the architecture under the melody</div>
+        </div>
+      </div>
+
+      <div class="stage reveal delay-5">
+        <div class="stage-badge"><span>v</span></div>
+        <div class="stage-body">
+          <h4>Opening <em>Scene</em></h4>
+          <p>Scene prose, initial dialogue, and branching choices. The output already carries message history, hidden story elements, and active tensions — the interaction loop begins from structured state, not free-form text.</p>
+          <div class="trace">— and then the first breath</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     GLIMPSE — what it looks like
+     ════════════════════════════════════════════════════════════ -->
+<section id="glimpse">
+  <div class="container">
+
+    <div class="flourish" aria-hidden="true">
+      <svg viewBox="0 0 180 24">
+        <path d="M2 12 C 30 20, 60 4, 90 12 S 150 20, 178 12"/>
+        <circle cx="46" cy="12" r="1.8" class="dot"/>
+        <circle cx="134" cy="12" r="1.8" class="dot"/>
+      </svg>
+    </div>
+
+    <div class="glimpse-head reveal">
+      <div class="eyebrow"><span class="numeral">v.</span> A Glimpse</div>
+      <h2 class="section-title">A window into <em>the story</em> itself.</h2>
+      <p class="lede">
+        What does a session actually feel like?
+        Below — a little notebook left open on the desk, with a small window
+        where the game plays itself: a title screen, a feeling typed into a form,
+        five quiet stages of construction, a scene, a transition, and an artifact the reader can hold.
+      </p>
+    </div>
+
+    <!-- The journal spread -->
+    <div class="journal reveal delay-1">
+
+      <!-- LEFT PAGE — chapter mark & illustration -->
+      <div class="jrn-left">
+        <div class="jrn-chapter">chapter · <em>a session in session</em></div>
+        <h3 class="jrn-title">From the <em>notebook</em>.</h3>
+        <p class="jrn-note">
+          a small window<br/>
+          onto the story<br/>
+          as it is being told.
+        </p>
+
+        <!-- pressed-flower ornament -->
+        <svg class="jrn-sprout" viewBox="0 0 140 170" aria-hidden="true">
+          <g stroke="#7A1022" stroke-width="1" stroke-linecap="round" opacity=".6" fill="none">
+            <path d="M70 10 Q 72 80, 70 160"/>
+            <path d="M70 40 Q 50 44, 36 60 Q 56 56, 70 48 Z" fill="#7A1022" fill-opacity=".1"/>
+            <path d="M70 72 Q 92 76, 104 92 Q 86 88, 70 80 Z" fill="#6B8E6F" fill-opacity=".12" stroke="#6B8E6F"/>
+            <path d="M70 104 Q 48 108, 34 124 Q 56 120, 70 112 Z" fill="#B8894B" fill-opacity=".12" stroke="#B8894B"/>
+            <circle cx="70" cy="14" r="5" fill="#7A1022" fill-opacity=".15"/>
+            <circle cx="70" cy="14" r="1.8" fill="#7A1022"/>
+          </g>
+        </svg>
+
+        <div class="jrn-stamp">
+          <span class="stamp-mark">N</span>
+          <span>recorded &middot; live session</span>
+        </div>
+      </div>
+
+      <!-- RIGHT PAGE — story window -->
+      <div class="jrn-right">
+
+        <div class="window-frame" aria-hidden="true">
+
+          <!-- ══ MOMENT 1 · WELCOME / TITLE ══ -->
+          <div class="scene scene-1 m1">
+            <!-- soft flower emblem -->
+            <div class="m1-flower">
+              <svg viewBox="0 0 78 78" fill="none">
+                <g transform="translate(39 39)" stroke="#a86c57" stroke-width="1" opacity=".85">
+                  <g fill="#fdf0e8">
+                    <ellipse cx="0" cy="-22" rx="7" ry="16"/>
+                    <g transform="rotate(60)"><ellipse cx="0" cy="-22" rx="7" ry="16"/></g>
+                    <g transform="rotate(120)"><ellipse cx="0" cy="-22" rx="7" ry="16"/></g>
+                    <g transform="rotate(180)"><ellipse cx="0" cy="-22" rx="7" ry="16"/></g>
+                    <g transform="rotate(240)"><ellipse cx="0" cy="-22" rx="7" ry="16"/></g>
+                    <g transform="rotate(300)"><ellipse cx="0" cy="-22" rx="7" ry="16"/></g>
+                  </g>
+                  <circle r="6" fill="#f8e4d8"/>
+                  <circle r="2" fill="#a86c57" stroke="none"/>
+                </g>
+              </svg>
+            </div>
+            <h3 class="m1-title">Emo<span>Nest</span></h3>
+            <p class="m1-sub">Co-creating adaptive narratives that fit your mood — now.</p>
+            <button class="m1-btn" tabindex="-1">Start your journey →</button>
+          </div>
+
+          <!-- ══ MOMENT 2 · EMOTIONAL INPUT ══ -->
+          <div class="scene scene-2 m2">
+            <div class="m2-card">
+              <div class="m2-h">Share what's on your mind</div>
+              <div class="m2-sub">we'll weave a story around what you share.</div>
+              <div class="m2-input">
+                <span class="typed">I can't tell whether I miss him, or the version of myself I was back then.</span>
+              </div>
+              <div class="m2-row"><span class="m2-btn">Begin your journey</span></div>
+            </div>
+          </div>
+
+          <!-- ══ MOMENT 3 · FIVE STAGES ══ -->
+          <div class="scene scene-3 m3">
+            <div class="m3-label">Weaving your story</div>
+            <div class="m3-stages">
+              <div class="m3-row m3-r1"><span class="roman">i.</span><span class="dot"></span><span>Foundation</span><span class="bar"></span></div>
+              <div class="m3-row m3-r2"><span class="roman">ii.</span><span class="dot"></span><span>Setting</span><span class="bar"></span></div>
+              <div class="m3-row m3-r3"><span class="roman">iii.</span><span class="dot"></span><span>Characters</span><span class="bar"></span></div>
+              <div class="m3-row m3-r4"><span class="roman">iv.</span><span class="dot"></span><span>Act Structure</span><span class="bar"></span></div>
+              <div class="m3-row m3-r5"><span class="roman">v.</span><span class="dot"></span><span>Opening Scene</span><span class="bar"></span></div>
+            </div>
+          </div>
+
+          <!-- ══ MOMENT 4 · DIALOGUE WITH AVATARS ══ -->
+          <div class="scene scene-4 m4">
+
+            <!-- scene narration strip (like the game's "Narration" header) -->
+            <div class="m4-narration">
+              <span class="tag">Narration</span>
+              <span class="text">Rain taps the glass of the harbor lighthouse. A half-finished letter rests on the desk.</span>
+            </div>
+
+            <!-- typing indicator (appears briefly before Elin's first bubble) -->
+            <div class="m4-typing"><span></span><span></span><span></span></div>
+
+            <!-- Row 1 · NPC Elin (sage bubble) -->
+            <div class="m4-row npc active m4-r1">
+              <div class="m4-av" aria-label="Elin avatar">E</div>
+              <div class="m4-bubble-wrap">
+                <div class="m4-name">Elin</div>
+                <div class="m4-bubble">You came back. <em>I wasn't sure you would.</em> Sit, if you like — the tea is still warm.</div>
+              </div>
+            </div>
+
+            <!-- Row 2 · You (peach bubble) -->
+            <div class="m4-row user m4-r2">
+              <div class="m4-av user" aria-label="You">Y</div>
+              <div class="m4-bubble-wrap">
+                <div class="m4-name">You</div>
+                <div class="m4-bubble">I needed to hear the sea again. And — to see you.</div>
+              </div>
+            </div>
+
+            <!-- Row 3 · NPC reveal (aged gold bubble) -->
+            <div class="m4-row reveal m4-r3">
+              <div class="m4-av" aria-label="Elin avatar">E</div>
+              <div class="m4-bubble-wrap">
+                <div class="m4-name">Elin · story reveal</div>
+                <div class="m4-bubble">There is <em>a letter for you</em> on the desk. From someone who is still waiting.</div>
+              </div>
+            </div>
+
+            <!-- Choices -->
+            <div class="m4-choices">
+              <div class="m4-choice m4-c1"><span class="mk">i.</span><span>Ask to read the letter.</span></div>
+              <div class="m4-choice m4-c2"><span class="mk">ii.</span><span>Stay quiet; let the rain speak first.</span></div>
+              <div class="m4-choice m4-c3"><span class="mk">iii.</span><span>Tell her you've been missing someone.</span></div>
+            </div>
+          </div>
+
+          <!-- ══ MOMENT 5 · SCENE SHIFT ══ -->
+          <div class="scene scene-5 m5">
+            <div class="m5-pill">
+              <span class="m5-tag">Scene Shift</span>
+              <span class="m5-text">The harbor, moments later</span>
+            </div>
+            <div class="m5-sub">— the bell rings a third time —</div>
+          </div>
+
+          <!-- ══ MOMENT 6 · ARTIFACT ══ -->
+          <div class="scene scene-6 m6">
+            <div class="m6-label">An artifact arrives</div>
+            <div class="m6-letter">
+              <div class="m6-inner">
+                my dearest —<br/>
+                if the light goes out,<br/>
+                follow the shore east until dawn.<br/>
+                <span class="sig">— E.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="scene-dots" aria-hidden="true">
+          <span class="d"></span><span class="d"></span><span class="d"></span>
+          <span class="d"></span><span class="d"></span><span class="d"></span>
+        </div>
+
+        <div class="window-caption">a self-playing loop &middot; six quiet moments</div>
+      </div>
+    </div>
+
+    <!-- ═════ ARTIFACT GALLERY · compact teaser that links out ═════ -->
+    <div class="artifact-teaser reveal delay-2">
+      <div class="at-text">
+        <div class="eyebrow"><span class="numeral">&amp;</span> Try them</div>
+        <h3>Ten small <em>things</em> the reader can hold.</h3>
+        <p>
+          At key moments the Artifact Agent shapes story state into a self-contained prop —
+          letters, photographs, pressed flowers, cassettes, telegrams, maps,
+          pocket watches, ciphers, matchbooks, music boxes —
+          tagged by format, style, and interaction, then checked against recent history
+          so it never repeats itself.
+        </p>
+        <a href="artifacts.html" class="at-cta">
+          Open the full gallery <span class="arr">↗</span>
+        </a>
+      </div>
+
+      <div class="at-tiles" aria-hidden="true">
+        <div class="at-tile">
+          <span class="at-no">i</span>
+          <span class="at-name">a letter <em>unfolds</em></span>
+        </div>
+        <div class="at-tile">
+          <span class="at-no">iv</span>
+          <span class="at-name">a cassette <em>plays</em></span>
+        </div>
+        <div class="at-tile">
+          <span class="at-no">vii</span>
+          <span class="at-name">a watch <em>winds</em></span>
+        </div>
+        <div class="at-tile">
+          <span class="at-no">viii</span>
+          <span class="at-name">a cipher <em>turns</em></span>
+        </div>
+        <div class="at-tile at-tile-more">
+          <span class="at-no">x</span>
+          <span class="at-name">&amp; six more</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- (full interactive gallery lives in artifacts.html) -->
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     LEADERBOARD
+     ════════════════════════════════════════════════════════════ -->
+<section id="leaderboard" class="leaderboard">
+  <div class="container">
+
+    <div class="lb-head">
+      <div class="reveal">
+        <div class="eyebrow"><span class="numeral">vi.</span> The Leaderboard</div>
+        <h2 class="section-title">Still <em>blooming</em>.</h2>
+        <p class="lede">
+          Evaluations for Narra&middot;Gym are currently in careful preparation.
+          When the numbers are ready, they will quietly arrive here — a small garden of rankings
+          grown over time. Until then, take a breath; the page is listening.
+        </p>
+      </div>
+
+      <div class="lb-visual reveal delay-2">
+        <div class="bloom-wrap">
+          <div class="bloom-ring"></div>
+          <div class="bloom-ring inner"></div>
+          <div class="bloom-center">
+            <!-- blooming SVG flower -->
+            <svg width="170" height="170" viewBox="0 0 170 170" aria-hidden="true">
+              <g transform="translate(85 85)">
+                <g class="petals">
+                  <g transform="rotate(0)"><ellipse cx="0" cy="-36" rx="14" ry="32" fill="#7A1022" fill-opacity=".15" stroke="#7A1022" stroke-width="1" stroke-opacity=".6"/></g>
+                  <g transform="rotate(72)"><ellipse cx="0" cy="-36" rx="14" ry="32" fill="#B8894B" fill-opacity=".14" stroke="#B8894B" stroke-width="1" stroke-opacity=".6"/></g>
+                  <g transform="rotate(144)"><ellipse cx="0" cy="-36" rx="14" ry="32" fill="#6B8E6F" fill-opacity=".14" stroke="#6B8E6F" stroke-width="1" stroke-opacity=".6"/></g>
+                  <g transform="rotate(216)"><ellipse cx="0" cy="-36" rx="14" ry="32" fill="#5D3A7A" fill-opacity=".13" stroke="#5D3A7A" stroke-width="1" stroke-opacity=".6"/></g>
+                  <g transform="rotate(288)"><ellipse cx="0" cy="-36" rx="14" ry="32" fill="#3D7A3D" fill-opacity=".13" stroke="#3D7A3D" stroke-width="1" stroke-opacity=".6"/></g>
+                </g>
+                <circle cx="0" cy="0" r="11" fill="#7A1022" fill-opacity=".2" stroke="#7A1022" stroke-width="1"/>
+                <circle cx="0" cy="0" r="3" fill="#7A1022"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card reveal delay-3">
+      <div class="table-head">
+        <h3>Narra&middot;Gym <em>Leaderboard</em></h3>
+        <span class="badge"><span class="pulse"></span> Results steeping</span>
+      </div>
+
+      <table class="lb-table" aria-label="Narra-Gym Leaderboard (coming soon)">
+        <thead>
+          <tr>
+            <th style="width:48px">#</th>
+            <th>Model</th>
+            <th>Creativity</th>
+            <th>Memory</th>
+            <th>Voice</th>
+            <th>Empathy</th>
+            <th>Artifact</th>
+            <th>Overall</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="rank-dot">i</span></td>
+            <td><span class="placeholder-line" style="width:120px"></span></td>
+            <td><span class="placeholder-line" style="width:46px"></span></td>
+            <td><span class="placeholder-line" style="width:46px"></span></td>
+            <td><span class="placeholder-line" style="width:46px"></span></td>
+            <td><span class="placeholder-line" style="width:46px"></span></td>
+            <td><span class="placeholder-line" style="width:46px"></span></td>
+            <td><span class="placeholder-line" style="width:56px"></span></td>
+          </tr>
+          <tr>
+            <td><span class="rank-dot">ii</span></td>
+            <td><span class="placeholder-line" style="width:110px"></span></td>
+            <td><span class="placeholder-line" style="width:42px"></span></td>
+            <td><span class="placeholder-line" style="width:42px"></span></td>
+            <td><span class="placeholder-line" style="width:42px"></span></td>
+            <td><span class="placeholder-line" style="width:42px"></span></td>
+            <td><span class="placeholder-line" style="width:42px"></span></td>
+            <td><span class="placeholder-line" style="width:52px"></span></td>
+          </tr>
+          <tr>
+            <td><span class="rank-dot">iii</span></td>
+            <td><span class="placeholder-line" style="width:100px"></span></td>
+            <td><span class="placeholder-line" style="width:38px"></span></td>
+            <td><span class="placeholder-line" style="width:38px"></span></td>
+            <td><span class="placeholder-line" style="width:38px"></span></td>
+            <td><span class="placeholder-line" style="width:38px"></span></td>
+            <td><span class="placeholder-line" style="width:38px"></span></td>
+            <td><span class="placeholder-line" style="width:48px"></span></td>
+          </tr>
+          <tr class="note-row">
+            <td colspan="8">— rows will fill as models arrive in the garden —</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="table-foot">
+        <span>Last updated &middot; <span style="color:var(--terracotta)">awaiting first harvest</span></span>
+        <span class="hand">check back gently</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     CITE
+     ════════════════════════════════════════════════════════════ -->
+<section id="cite">
+  <div class="container">
+    <div class="flourish" aria-hidden="true">
+      <svg viewBox="0 0 180 24">
+        <path d="M2 12 C 40 22, 60 2, 90 12 S 140 22, 178 12"/>
+        <circle cx="90" cy="12" r="2.2" class="dot"/>
+      </svg>
+    </div>
+
+    <div class="cite-grid">
+      <div class="reveal">
+        <div class="eyebrow"><span class="numeral">vii.</span> Cite</div>
+        <h2 class="section-title">If you share our <em>quiet interest</em>.</h2>
+        <p class="lede">
+          If Narra&middot;Gym helps your research, please cite the paper.
+          Code and evaluation traces will accompany the release.
+        </p>
+      </div>
+
+      <div class="reveal delay-1">
+        <div class="cite-card" id="bibtex"><span class="c">% NeurIPS 2026 · Evaluations &amp; Datasets Track</span>
+<span class="k">@inproceedings</span>{narragym2026,
+  <span class="k">title</span>     = {<span class="v">In Character, In Context: NARRA-Gym as an Evaluation Environment for Interactive Narrative Agents</span>},
+  <span class="k">author</span>    = {<span class="v">Anonymous</span>},
+  <span class="k">booktitle</span> = {<span class="v">Advances in Neural Information Processing Systems</span>},
+  <span class="k">year</span>      = {<span class="v">2026</span>},
+  <span class="k">note</span>      = {<span class="v">Evaluations and Datasets Track</span>}
+}</div>
+        <button class="copy-btn" id="copyBtn">Copy bibtex →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="foot">
+    <div class="foot-left">
+      <span class="foot-title">Narra&middot;Gym</span>
+      <span class="foot-quote">“an environment for stories that listen.”</span>
+    </div>
+    <div class="foot-links">
+      <a href="#prelude">Prelude</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#ensemble">Ensemble</a>
+      <a href="#glimpse">Glimpse</a>
+      <a href="#leaderboard">Leaderboard</a>
+      <a href="#cite">Cite</a>
+    </div>
+    <span class="foot-copy">© 2026 &middot; quietly maintained</span>
+  </div>
+</footer>
+
+<script>
+// gentle scroll reveal
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('is-in');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.12, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// gently copy bibtex
+const copyBtn = document.getElementById('copyBtn');
+if(copyBtn){
+  copyBtn.addEventListener('click', async ()=>{
+    const txt = document.getElementById('bibtex').innerText;
+    try{
+      await navigator.clipboard.writeText(txt);
+      copyBtn.textContent = 'Copied with care ✓';
+      setTimeout(()=>copyBtn.textContent='Copy bibtex →', 2400);
+    }catch(err){
+      copyBtn.textContent = 'Copy failed — please select manually';
+    }
+  });
+}
+
+// subtle parallax on watercolor washes
+const washes = document.querySelectorAll('.wash');
+let ticking = false;
+window.addEventListener('scroll', ()=>{
+  if(!ticking){
+    requestAnimationFrame(()=>{
+      const y = window.scrollY;
+      washes.forEach((w,i)=>{
+        const speed = (i+1) * 0.06;
+        w.style.transform = `translate3d(0, ${y * speed}px, 0)`;
+      });
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
+</script>
+
+</body>
+</html>

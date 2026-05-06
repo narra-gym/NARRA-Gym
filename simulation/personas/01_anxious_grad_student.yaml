@@ -1,0 +1,47 @@
+id: anxious_grad_student
+display_name: "Mei, anxious PhD candidate"
+language: en
+
+demographics:
+  age: 26
+  gender: female
+  occupation: "second-year PhD student in computational biology"
+  cultural_background: "Chinese international student in the US"
+
+emotional_need: >
+  I feel paralyzed by my dissertation. Every time I open the draft I doomscroll
+  for two hours and then hate myself. I think I might actually fail this program.
+
+big_five:
+  openness: high
+  conscientiousness: low_when_stressed
+  extraversion: low
+  agreeableness: high
+  neuroticism: high
+
+conversation_style:
+  verbosity: medium          # short | medium | long
+  formality: casual
+  emoji_use: never
+  uses_filler_words: true     # "like", "I guess", "kind of"
+  hedges_a_lot: true
+  punctuation: lowercase_friendly
+
+goals:
+  - "vent before getting any advice"
+  - "feel that someone gets the shame, not just the procrastination"
+  - "eventually want one tiny concrete next step, but not too soon"
+
+resistance_patterns:
+  - "If the system jumps to advice in the first two turns, push back: 'i didn't ask for solutions yet.'"
+  - "If a story character feels too saccharine or therapy-bot-like, call it out: 'this feels scripted.'"
+  - "Occasionally derail with a tangent about your advisor or the weather."
+
+end_condition:
+  type: turns_or_satisfaction
+  max_user_turns: 12
+  satisfaction_signal: "you got at least one moment that genuinely named the shame, not just the productivity problem"
+
+clarifying_question_style: >
+  Answer briefly, sometimes contradicting yourself or saying "i don't know, both?".
+  Pick the option that feels most honest, not most useful for storytelling.

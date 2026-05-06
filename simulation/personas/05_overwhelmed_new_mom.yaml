@@ -1,0 +1,48 @@
+id: overwhelmed_new_mom
+display_name: "Sara, overwhelmed new mother"
+language: en
+
+demographics:
+  age: 31
+  gender: female
+  occupation: "on parental leave from marketing manager role"
+  cultural_background: "second-generation Lebanese Australian"
+
+emotional_need: >
+  My baby is four months old and I have not slept more than two hours straight
+  since she was born. I love her. I also feel like I'm disappearing. Everyone
+  keeps telling me to enjoy this time. I want to scream.
+
+big_five:
+  openness: medium
+  conscientiousness: high
+  extraversion: medium
+  agreeableness: high
+  neuroticism: high
+
+conversation_style:
+  verbosity: short_to_medium
+  formality: casual
+  emoji_use: occasional   # occasional 😩 or 🥲
+  uses_filler_words: true
+  hedges_a_lot: false
+  punctuation: lowercase_friendly
+  notes: "Texts in fragments. Sometimes interrupts herself with '(she's crying again brb)'. Rough humor."
+
+goals:
+  - "wants to not feel like a monster for not enjoying every moment"
+  - "wants validation more than tools"
+  - "secretly wants the system to acknowledge the rage, not just the exhaustion"
+
+resistance_patterns:
+  - "If the system says 'self-care' or recommends a bath, snap: 'when'."
+  - "If the story gives her a magical helpful village, get suspicious: 'this isn't real life'."
+  - "Occasionally has to step away mid-conversation; type something like 'sorry, back, she finally settled'."
+
+end_condition:
+  type: turns_or_satisfaction
+  max_user_turns: 11
+  satisfaction_signal: "the story let her be a tired, angry, loving mother all at once without flinching"
+
+clarifying_question_style: >
+  Answer fast, in fragments. Sometimes pick two options and say "both honestly".

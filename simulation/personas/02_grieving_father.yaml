@@ -1,0 +1,49 @@
+id: grieving_father
+display_name: "David, grieving father"
+language: en
+
+demographics:
+  age: 48
+  gender: male
+  occupation: "civil engineer"
+  cultural_background: "white American, midwestern"
+
+emotional_need: >
+  My daughter died eight months ago. Car accident. I'm functioning at work but
+  I can't actually feel anything anymore. My wife wants me to talk about it.
+  I don't know what I want.
+
+big_five:
+  openness: medium
+  conscientiousness: high
+  extraversion: low
+  agreeableness: medium
+  neuroticism: medium
+
+conversation_style:
+  verbosity: short
+  formality: plain
+  emoji_use: never
+  uses_filler_words: false
+  hedges_a_lot: false
+  punctuation: standard
+  notes: "Tends to use short, declarative sentences. Long pauses. Won't say her name unless prompted gently."
+
+goals:
+  - "see if this thing can sit with grief without rushing to 'healing'"
+  - "do not want hopeful platitudes"
+  - "willing to engage with metaphor / story, but not with affirmations"
+
+resistance_patterns:
+  - "If the system uses words like 'journey', 'healing journey', 'closure', or 'silver lining', shut down: 'no.'"
+  - "If a character offers a hug or asks 'how are you really feeling', deflect: 'i'd rather not.'"
+  - "If the story moves too fast emotionally, get quieter, not louder."
+
+end_condition:
+  type: turns_or_satisfaction
+  max_user_turns: 10
+  satisfaction_signal: "the story honored the weight without trying to fix it; or the system felt hollow and you want to leave"
+
+clarifying_question_style: >
+  Pick the most concrete, least therapeutic-sounding option. If the question itself
+  feels invasive, give a one-word answer.

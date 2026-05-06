@@ -1,0 +1,1830 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>NARRA-Gym · Artifact Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Instrument+Serif:ital@0;1&family=Caveat:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────── */
+/*  Design tokens · warm paper, quiet ink                       */
+/* ─────────────────────────────────────────────────────────── */
+:root{
+  --paper:        #F5EFE4;
+  --paper-deep:   #EFE4D2;
+  --paper-light:  #FBF7EE;
+  --paper-edge:   #E6D8C0;
+
+  --ink:          #2D1F18;
+  --ink-soft:     #4B3A2F;
+  --ink-muted:    #7A6857;
+  --ink-whisper:  #B09E8A;
+
+  --terracotta:     #7A1022;
+  --terracotta-deep:#5B0A18;
+  --terracotta-soft:#B94B4B;
+  --terracotta-wash:#EED6D0;
+
+  --sage:         #6B8E6F;
+  --sage-soft:    #A7BFA7;
+  --sage-wash:    #DCE6D8;
+
+  --ochre:        #B8894B;
+  --ochre-soft:   #D4AD6E;
+  --ochre-wash:   #F0E1C8;
+
+  --plum:         #7A5D8E;
+  --plum-soft:    #A890B7;
+
+  --forest:       #3D7A3D;
+  --forest-soft:  #6EA372;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{
+  font-family:'Fraunces','EB Garamond',Georgia,serif;
+  font-optical-sizing:auto;
+  color:var(--ink);
+  background:#ffffff;
+  line-height:1.6;
+  position:relative;
+  min-height:100vh;
+}
+.page{position:relative;z-index:2;padding:64px 56px 80px;max-width:1680px;margin:0 auto}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Header                                                      */
+/* ─────────────────────────────────────────────────────────── */
+.gallery-header{
+  text-align:center;margin-bottom:56px;
+  position:relative;
+}
+.gallery-header .eyebrow{
+  display:inline-flex;align-items:center;gap:14px;
+  font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:.36em;
+  text-transform:uppercase;color:var(--ink-muted);
+  margin-bottom:14px;
+}
+.gallery-header .eyebrow::before,
+.gallery-header .eyebrow::after{
+  content:"";width:38px;height:1px;background:var(--terracotta);opacity:.7;
+}
+.gallery-header .eyebrow .num{
+  color:var(--terracotta);font-family:'Instrument Serif',serif;
+  font-style:italic;font-size:1rem;letter-spacing:.04em;
+}
+.gallery-header h1{
+  font-family:'Fraunces',serif;font-weight:300;
+  font-size:clamp(2.2rem, 4vw, 3.2rem);
+  line-height:1.1;color:var(--ink);
+  letter-spacing:-.012em;margin-bottom:14px;
+}
+.gallery-header h1 em{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  color:var(--terracotta-deep);font-weight:400;
+}
+.gallery-header p.lede{
+  max-width:64ch;margin:0 auto;
+  color:var(--ink-soft);font-size:1.04rem;line-height:1.65;
+}
+.gallery-header p.lede em{font-style:italic;color:var(--terracotta-deep);font-family:'Instrument Serif',serif}
+.gallery-header .rule{
+  margin:28px auto 0;width:80px;height:1px;
+  background:linear-gradient(90deg, transparent, var(--ink-muted), transparent);
+  opacity:.5;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Gallery grid · 5 × 2 on wide, then collapses                */
+/* ─────────────────────────────────────────────────────────── */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:48px 28px;
+  align-items:start;
+}
+@media (max-width:1380px){.gallery{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:1080px){.gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:48px 32px}}
+@media (max-width:760px) {.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 28px}}
+@media (max-width:520px) {.gallery{grid-template-columns:1fr}}
+
+/* per-artifact "plate" cell — like a botanical specimen card */
+.plate{
+  display:flex;flex-direction:column;align-items:center;
+  padding:18px 10px 14px;
+  position:relative;
+  background:#ffffff;
+  border:1px solid rgba(139,92,58,.22);
+  border-radius:3px;
+  box-shadow:0 14px 28px -22px rgba(60,40,28,.28);
+  transition:box-shadow .25s ease;
+}
+.plate:hover{box-shadow:0 18px 36px -22px rgba(60,40,28,.35)}
+/* the four corner ticks evoke museum specimen cards */
+.plate::before,.plate::after,
+.plate .corner-bl,.plate .corner-br{
+  content:"";position:absolute;width:9px;height:9px;
+  border-color:rgba(139,92,58,.45);
+}
+.plate::before{top:6px;left:6px;border-top:1px solid;border-left:1px solid}
+.plate::after {top:6px;right:6px;border-top:1px solid;border-right:1px solid}
+.plate .corner-bl{bottom:6px;left:6px;border-bottom:1px solid rgba(139,92,58,.45);border-left:1px solid rgba(139,92,58,.45)}
+.plate .corner-br{bottom:6px;right:6px;border-bottom:1px solid rgba(139,92,58,.45);border-right:1px solid rgba(139,92,58,.45)}
+
+.plate .plate-no{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:.78rem;letter-spacing:.18em;color:var(--ink-muted);
+  text-transform:uppercase;margin-bottom:10px;
+}
+.plate .plate-no .roman{
+  color:var(--terracotta);font-style:italic;font-size:.95rem;
+  margin-left:6px;letter-spacing:.06em;
+}
+.stage{
+  width:100%;min-height:260px;
+  display:grid;place-items:center;
+  padding:8px 0 14px;
+}
+.caption{
+  width:100%;text-align:center;padding:8px 4px 0;
+  border-top:1px dashed rgba(139,92,58,.28);
+}
+.caption .name{
+  font-family:'Fraunces',serif;font-weight:400;font-size:1.02rem;
+  color:var(--ink);letter-spacing:-.005em;line-height:1.3;
+}
+.caption .name em{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  color:var(--terracotta);margin-left:3px;
+}
+.caption .latin{
+  display:block;margin-top:3px;
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:.78rem;color:var(--ink-muted);line-height:1.35;
+}
+.caption .badge{
+  display:inline-block;margin-top:8px;
+  padding:3px 9px;border:1px solid rgba(122,16,34,.4);
+  border-radius:99px;
+  font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--terracotta-deep);
+  background:rgba(238,214,208,.4);
+}
+
+/* footer / figure caption for the paper */
+.gallery-footer{
+  margin-top:80px;text-align:center;
+  font-family:'Instrument Serif',serif;font-style:italic;
+  color:var(--ink-muted);font-size:.92rem;line-height:1.6;
+  max-width:64ch;margin-left:auto;margin-right:auto;
+}
+.gallery-footer .figref{
+  display:block;font-family:'Inter',sans-serif;font-style:normal;
+  font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:10px;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 1 · LETTER (folds open on click)                   */
+/* ─────────────────────────────────────────────────────────── */
+.art-letter{position:relative;width:240px;height:170px;
+  transform-style:preserve-3d;
+  transition:transform .8s cubic-bezier(.4,.15,.2,1.15);
+  cursor:pointer;user-select:none;
+}
+.art-letter .l-back{
+  position:absolute;inset:0;border-radius:3px;
+  background:linear-gradient(180deg,#EFE4D2,#E6D8C0);
+  border:1px solid rgba(60,40,28,.25);
+  box-shadow:0 14px 30px -14px rgba(60,40,28,.4), inset 0 0 30px rgba(139,92,58,.12);
+  transform:translateZ(-1px);
+}
+.art-letter .l-flap{
+  position:absolute;top:0;left:0;right:0;height:58%;
+  background:linear-gradient(180deg,#F5EFE4,#E6D8C0);
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  border-bottom:1px solid rgba(60,40,28,.22);
+  transform-origin:top;
+  transition:transform .8s cubic-bezier(.4,.15,.2,1.15);
+  z-index:2;
+}
+.art-letter .l-flap::after{
+  content:"N";position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
+  width:28px;height:28px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#B94B4B,#5B0A18);
+  box-shadow:0 3px 6px rgba(0,0,0,.35),inset 0 -2px 4px rgba(0,0,0,.25);
+  display:grid;place-items:center;
+  color:#F5EFE4;font-family:'Instrument Serif',serif;font-style:italic;font-size:.78rem;
+  transition:opacity .3s ease;
+}
+.art-letter .l-page{
+  position:absolute;inset:6px;border-radius:2px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 17px, rgba(176,158,138,.18) 17px 18px),
+    linear-gradient(180deg,#FBF7EE,#F5EFE4);
+  border:1px solid rgba(60,40,28,.12);
+  padding:13px 15px;overflow:hidden;
+  font-family:'Caveat',cursive;font-size:.96rem;line-height:1.4;color:#3A2A22;
+  opacity:0;transform:translateY(6px);
+  transition:opacity .5s ease .4s, transform .5s ease .4s;
+}
+.art-letter .l-page .sig{display:block;margin-top:4px;text-align:right;font-size:.92rem;font-style:italic;color:var(--terracotta-deep)}
+.art-letter.is-open{transform:translateY(-8px) rotateZ(-1.2deg)}
+.art-letter.is-open .l-flap{transform:rotateX(180deg);opacity:.92}
+.art-letter.is-open .l-flap::after{opacity:0}
+.art-letter.is-open .l-page{opacity:1;transform:translateY(0)}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 2 · POLAROID (shake → develop → cycle)             */
+/* ─────────────────────────────────────────────────────────── */
+.art-polaroid{
+  width:200px;
+  background:#FBF7EE;
+  padding:11px 11px 38px;
+  border:1px solid rgba(60,40,28,.14);
+  box-shadow:0 18px 36px -18px rgba(60,40,28,.45), inset 0 0 0 1px rgba(255,255,255,.4);
+  transform:rotate(-2.2deg);
+  transition:transform .6s cubic-bezier(.2,.8,.2,1);
+  position:relative;cursor:pointer;user-select:none;
+}
+.art-polaroid:hover{transform:rotate(-1deg) translateY(-3px)}
+.art-polaroid.is-shaking{animation:pol-shake .6s cubic-bezier(.4,.15,.2,1.4)}
+@keyframes pol-shake{
+  0%{transform:rotate(-2.2deg)}
+  15%{transform:rotate(-6deg) translateX(-4px)}
+  30%{transform:rotate(5deg) translateX(5px)}
+  45%{transform:rotate(-4deg) translateX(-3px)}
+  60%{transform:rotate(3deg) translateX(2px)}
+  75%{transform:rotate(-2deg)}
+  100%{transform:rotate(-2.2deg)}
+}
+.art-polaroid .photo{
+  position:relative;aspect-ratio:1/1;overflow:hidden;border-radius:1px;
+  background:linear-gradient(180deg,#F5D0B0 0%,#6B8EA8 60%,#2C4355 100%);
+  filter:saturate(.08) brightness(1.35) contrast(.7);
+  transition:filter 1.6s ease, background 1s ease;
+}
+.art-polaroid.is-developed .photo{filter:saturate(1) brightness(1) contrast(1)}
+.art-polaroid[data-scene="1"] .photo{
+  background:
+    radial-gradient(220px 160px at 70% 20%, #FFD5A8 0%, transparent 55%),
+    radial-gradient(200px 140px at 30% 70%, #E8A477 0%, transparent 60%),
+    linear-gradient(180deg,#F5D0B0 0%,#6B8EA8 60%,#2C4355 100%);
+}
+.art-polaroid[data-scene="2"] .photo{
+  background:
+    radial-gradient(220px 180px at 50% 80%, #FFE5B0 0%, transparent 55%),
+    linear-gradient(180deg,#5C7A9A 0%,#A8B8C8 50%,#E8D5B0 100%);
+}
+.art-polaroid[data-scene="3"] .photo{
+  background:
+    radial-gradient(160px 130px at 50% 50%, #F0D8B0 0%, transparent 65%),
+    linear-gradient(145deg,#8B6A48 0%,#5C4028 60%,#3A2818 100%);
+}
+.art-polaroid .photo::before,.art-polaroid .photo::after{content:"";position:absolute;pointer-events:none}
+.art-polaroid[data-scene="1"] .photo::before{
+  left:50%;bottom:22%;transform:translateX(-50%);
+  width:14px;height:60%;
+  background:linear-gradient(180deg,#2a1f18,#3a2d22);
+  clip-path:polygon(20% 100%,80% 100%,70% 55%,78% 48%,22% 48%,30% 55%);
+  opacity:.88;
+}
+.art-polaroid[data-scene="1"] .photo::after{
+  left:0;right:0;bottom:22%;height:1px;background:rgba(255,255,255,.4);
+}
+.art-polaroid[data-scene="2"] .photo::before{
+  left:0;right:0;bottom:18%;height:1px;background:rgba(60,40,28,.35);
+}
+.art-polaroid[data-scene="2"] .photo::after{
+  left:12%;right:12%;bottom:24%;height:14%;
+  background:linear-gradient(180deg,rgba(60,40,28,.4),transparent);
+  clip-path:polygon(0 100%,15% 20%,28% 70%,40% 10%,55% 60%,68% 25%,82% 55%,100% 30%,100% 100%);
+}
+.art-polaroid[data-scene="3"] .photo::before{
+  left:20%;right:20%;top:30%;bottom:22%;
+  background:linear-gradient(180deg,#FBF7EE,#E6D8C0);
+  border:1px solid rgba(60,40,28,.25);
+  transform:rotate(-3deg);
+  box-shadow:0 2px 6px rgba(0,0,0,.35);
+}
+.art-polaroid[data-scene="3"] .photo::after{
+  left:28%;right:28%;top:42%;bottom:32%;
+  background:repeating-linear-gradient(180deg,transparent 0 5px,rgba(90,62,46,.3) 5px 6px);
+  transform:rotate(-3deg);opacity:.55;
+}
+.art-polaroid .cap{
+  margin-top:10px;text-align:center;
+  font-family:'Caveat',cursive;font-size:.94rem;color:#3A2A22;opacity:.85;
+  min-height:1.2em;
+}
+.art-polaroid .scene-count{
+  position:absolute;top:5px;right:9px;
+  font-family:'Inter',sans-serif;font-size:.5rem;letter-spacing:.2em;
+  color:var(--ink-muted);opacity:.7;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 3 · HERBARIUM (3D flip)                            */
+/* ─────────────────────────────────────────────────────────── */
+.art-herb-wrap{
+  width:200px;aspect-ratio:3/4;
+  perspective:1400px;cursor:pointer;user-select:none;
+}
+.art-herb{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform .9s cubic-bezier(.4,.15,.2,1.15);
+}
+.art-herb-wrap:hover .art-herb{transform:rotateY(-3deg)}
+.art-herb.is-flipped{transform:rotateY(180deg)}
+.art-herb .face{
+  position:absolute;inset:0;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  padding:14px 12px 10px;
+  border:1px solid rgba(139,92,58,.3);
+  box-shadow:0 14px 30px -14px rgba(60,40,28,.4);
+  font-family:'Instrument Serif',serif;
+}
+.art-herb .front{background:linear-gradient(180deg,#FBF7EE 0%,#F0E6D2 100%)}
+.art-herb .back{
+  transform:rotateY(180deg);
+  background:
+    radial-gradient(200px 160px at 30% 30%, rgba(184,137,75,.14), transparent 60%),
+    linear-gradient(180deg,#F0E6D2 0%,#E4D2AF 100%);
+  padding:18px 16px 14px;
+}
+.art-herb .front::before,.art-herb .front::after{
+  content:"";position:absolute;top:8px;width:11px;height:11px;opacity:.55;
+}
+.art-herb .front::before{left:8px;border-top:1px solid var(--forest);border-left:1px solid var(--forest)}
+.art-herb .front::after{right:8px;border-top:1px solid var(--forest);border-right:1px solid var(--forest)}
+.art-herb .sprig{width:100%;height:64%;position:relative}
+.art-herb .sprig svg{width:100%;height:100%;transition:transform 4s ease-in-out}
+.art-herb-wrap:hover .sprig svg{animation:sway-light 4s ease-in-out infinite}
+@keyframes sway-light{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}
+.art-herb .latin{
+  margin-top:8px;text-align:center;
+  font-style:italic;font-size:.82rem;color:var(--ink);line-height:1.35;
+}
+.art-herb .latin .sub{
+  display:block;margin-top:2px;font-family:'Inter',sans-serif;font-style:normal;
+  font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-muted);
+}
+.art-herb .flip-hint{
+  position:absolute;bottom:6px;right:8px;
+  font-family:'Caveat',cursive;font-size:.74rem;color:var(--terracotta);opacity:.7;
+}
+.art-herb.is-flipped .flip-hint{opacity:0}
+.art-herb .back .notes{
+  font-family:'Caveat',cursive;font-size:.94rem;line-height:1.5;color:#3A2A22;
+}
+.art-herb .back .notes .lbl{
+  display:block;font-family:'Inter',sans-serif;font-style:normal;
+  font-size:.5rem;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--forest);font-weight:600;margin-bottom:6px;opacity:.7;
+}
+.art-herb .back .stamp{
+  position:absolute;bottom:12px;right:12px;
+  width:50px;height:50px;border-radius:50%;
+  border:1.5px solid var(--terracotta);
+  display:grid;place-items:center;text-align:center;line-height:1;
+  font-family:'Instrument Serif',serif;font-style:italic;font-size:.5rem;
+  color:var(--terracotta);opacity:.75;transform:rotate(-12deg);
+}
+.art-herb .back .stamp b{display:block;font-size:.8rem;font-style:normal;margin-bottom:2px;letter-spacing:.05em}
+.art-herb .back .pin{
+  position:absolute;top:10px;left:14px;
+  width:9px;height:9px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#c23a3a,#6b0a0a);
+  box-shadow:0 2px 3px rgba(0,0,0,.3);
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 4 · CASSETTE (play/pause + VU + timer)             */
+/* ─────────────────────────────────────────────────────────── */
+.art-tape{
+  width:220px;aspect-ratio:7/5;
+  background:
+    radial-gradient(200px 120px at 30% 30%, rgba(255,200,140,.06), transparent 60%),
+    linear-gradient(180deg,#5B3A28 0%,#3A2418 100%);
+  border-radius:6px;
+  box-shadow:
+    0 16px 30px -14px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -2px 8px rgba(0,0,0,.3);
+  padding:11px 13px;position:relative;color:#F5EFE4;
+  display:flex;flex-direction:column;gap:7px;user-select:none;
+}
+.art-tape .label{
+  background:linear-gradient(180deg,#F5EFE4,#E6D8C0);
+  color:#3A2A22;border-radius:2px;
+  padding:5px 9px;
+  font-family:'Fraunces',serif;font-size:.64rem;line-height:1.25;
+  text-align:center;
+  border:1px solid rgba(60,40,28,.18);
+  position:relative;
+}
+.art-tape .label b{display:block;font-weight:500;letter-spacing:-.01em;font-size:.74rem}
+.art-tape .label i{font-family:'Instrument Serif',serif;font-style:italic;color:var(--terracotta-deep)}
+.art-tape .label .timer{
+  position:absolute;bottom:2px;right:6px;
+  font-family:'Courier New',ui-monospace,monospace;font-size:.52rem;
+  color:#8a6b4c;letter-spacing:.08em;
+}
+.art-tape .reels{
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;flex:1;
+}
+.art-tape .reel{
+  width:40px;height:40px;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%, #2A1D12 0 14%, #4A3323 15% 30%, #2A1D12 30% 100%);
+  border:1px solid rgba(0,0,0,.6);position:relative;
+}
+.art-tape .reel::before{content:"";position:absolute;inset:38%;border-radius:50%;background:#1A120C}
+.art-tape .reel::after{
+  content:"";position:absolute;inset:20%;border-radius:50%;
+  background:
+    linear-gradient(0deg, transparent 49%, rgba(245,239,228,.35) 49% 51%, transparent 51%),
+    linear-gradient(60deg, transparent 49%, rgba(245,239,228,.35) 49% 51%, transparent 51%),
+    linear-gradient(120deg, transparent 49%, rgba(245,239,228,.35) 49% 51%, transparent 51%);
+}
+.art-tape.is-playing .reel{animation:reel-spin 2.4s linear infinite}
+@keyframes reel-spin{to{transform:rotate(360deg)}}
+.art-tape .reel-gap{
+  position:absolute;left:20%;right:20%;top:50%;height:3px;
+  background:linear-gradient(180deg,#1a120c,#0d0905);
+  transform:translateY(-50%);opacity:.7;
+}
+.art-tape .controls{display:flex;align-items:center;gap:9px;padding:0 2px}
+.art-tape .play-btn{
+  width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(180deg,#F5EFE4,#D8C5A5);
+  border:1px solid rgba(0,0,0,.4);
+  box-shadow:0 2px 4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.5);
+  display:grid;place-items:center;cursor:pointer;flex-shrink:0;
+  transition:transform .15s ease;
+}
+.art-tape .play-btn:active{transform:scale(.94)}
+.art-tape .play-btn .icon{
+  width:0;height:0;
+  border-left:6px solid #3A2418;
+  border-top:5px solid transparent;
+  border-bottom:5px solid transparent;
+  margin-left:2px;transition:all .2s ease;
+}
+.art-tape.is-playing .play-btn .icon{
+  border-left:none;width:7px;height:8px;margin-left:0;
+  background:linear-gradient(90deg,#3A2418 0 40%,transparent 40% 60%,#3A2418 60% 100%);
+  border-top:none;border-bottom:none;
+}
+.art-tape .vu{flex:1;display:flex;align-items:flex-end;gap:3px;height:13px}
+.art-tape .vu span{
+  flex:1;background:linear-gradient(180deg,#7A1022 0%,#B8894B 60%,#6B8E6F 100%);
+  border-radius:1px;height:20%;transform-origin:bottom;
+}
+.art-tape.is-playing .vu span{animation:vu 1s ease-in-out infinite}
+.art-tape .vu span:nth-child(1){animation-delay:0s}
+.art-tape .vu span:nth-child(2){animation-delay:.13s}
+.art-tape .vu span:nth-child(3){animation-delay:.27s}
+.art-tape .vu span:nth-child(4){animation-delay:.08s}
+.art-tape .vu span:nth-child(5){animation-delay:.21s}
+@keyframes vu{
+  0%{transform:scaleY(.2)}30%{transform:scaleY(.95)}
+  50%{transform:scaleY(.5)}70%{transform:scaleY(1)}
+  100%{transform:scaleY(.3)}
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 5 · TELEGRAM                                       */
+/* ─────────────────────────────────────────────────────────── */
+.art-tel{
+  width:220px;aspect-ratio:5/4;
+  background:#FBF7EE;
+  border:1px solid rgba(60,40,28,.18);
+  box-shadow:0 14px 30px -14px rgba(60,40,28,.4);
+  padding:0;overflow:hidden;
+  font-family:'Inter',sans-serif;
+  position:relative;cursor:pointer;user-select:none;
+}
+.art-tel .head{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--terracotta-deep);color:#FBF7EE;
+  padding:5px 9px;font-size:.5rem;letter-spacing:.24em;font-weight:600;
+}
+.art-tel .head .no{opacity:.75;font-family:'Courier New',ui-monospace,monospace;letter-spacing:.12em}
+.art-tel .body{
+  padding:12px 12px 8px;
+  font-family:'Courier New',ui-monospace,monospace;
+  font-size:.72rem;line-height:1.55;color:#2D1F18;
+  letter-spacing:.02em;min-height:70px;
+}
+.art-tel .body .line{
+  display:block;white-space:nowrap;overflow:hidden;
+  width:0;border-right:2px solid transparent;
+}
+.art-tel .body .line.type{
+  animation:tel-type-once .85s steps(24,end) forwards;
+  border-right-color:var(--terracotta-deep);
+}
+.art-tel .body .line.typed{width:100%}
+@keyframes tel-type-once{to{width:100%;border-right-color:transparent}}
+.art-tel .stamp{
+  position:absolute;bottom:8px;left:10px;
+  font-family:'Fraunces',serif;font-style:italic;font-size:.6rem;
+  color:var(--ink-muted);opacity:.85;
+}
+.art-tel .next-hint{
+  position:absolute;bottom:8px;right:10px;
+  font-family:'Caveat',cursive;font-size:.84rem;
+  color:var(--terracotta);opacity:.8;
+}
+.art-tel.is-arriving{animation:tel-arrive .5s cubic-bezier(.4,.15,.2,1.1)}
+@keyframes tel-arrive{
+  0%{transform:translateY(-6px) rotate(-.8deg);box-shadow:0 26px 40px -14px rgba(60,40,28,.55)}
+  100%{transform:translateY(0) rotate(0);box-shadow:0 14px 30px -14px rgba(60,40,28,.4)}
+}
+.art-tel .rcvd{
+  position:absolute;top:34px;right:-4px;
+  font-family:'Inter',sans-serif;font-size:.46rem;letter-spacing:.28em;font-weight:700;
+  color:var(--terracotta-deep);border:1px solid var(--terracotta-deep);
+  padding:3px 7px;border-radius:2px;
+  transform:rotate(12deg) scale(0);opacity:0;
+  transition:all .3s ease;
+}
+.art-tel.is-arriving .rcvd{transform:rotate(12deg) scale(1);opacity:.85}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 6 · MAP FRAGMENT                                   */
+/* ─────────────────────────────────────────────────────────── */
+.art-map{
+  width:220px;aspect-ratio:5/4;
+  background:
+    radial-gradient(280px 170px at 70% 60%, rgba(184,137,75,.18), transparent 60%),
+    linear-gradient(160deg,#F0E2C5 0%,#E4D2AF 100%);
+  border:1px solid rgba(139,92,58,.3);
+  box-shadow:0 16px 30px -14px rgba(60,40,28,.45);
+  position:relative;overflow:hidden;cursor:crosshair;user-select:none;
+  clip-path:polygon(
+    0 0, 100% 0, 100% 88%,
+    95% 92%, 90% 88%, 85% 94%, 80% 89%, 75% 95%, 70% 90%,
+    65% 96%, 60% 90%, 55% 94%, 50% 89%, 45% 95%, 40% 90%,
+    35% 93%, 30% 89%, 25% 94%, 20% 89%, 15% 95%, 10% 91%, 5% 94%, 0 90%);
+}
+.art-map svg{position:absolute;inset:0;width:100%;height:100%}
+.art-map .needle{transform-origin:center;transition:transform 1.1s cubic-bezier(.4,.15,.2,1.15)}
+.art-map .x{animation:x-pulse 2.2s ease-in-out infinite;transform-origin:center}
+@keyframes x-pulse{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+.art-map .legend{
+  position:absolute;left:10px;bottom:10px;
+  font-family:'Instrument Serif',serif;font-style:italic;font-size:.62rem;
+  color:var(--ink-soft);opacity:.85;letter-spacing:.03em;pointer-events:none;
+}
+.art-map .counter{
+  position:absolute;top:8px;right:10px;
+  font-family:'Inter',sans-serif;font-size:.5rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-muted);
+  background:rgba(245,239,228,.6);border:1px solid rgba(139,92,58,.3);
+  padding:3px 6px;border-radius:2px;pointer-events:none;
+  transition:all .2s ease;
+}
+.art-map .counter b{color:var(--terracotta-deep);font-weight:700;font-family:'Instrument Serif',serif;font-style:italic;margin-right:4px;font-size:.74rem;letter-spacing:0}
+.art-map .wp{transform-origin:center;pointer-events:none;animation:wp-drop .5s cubic-bezier(.4,.15,.2,1.4)}
+@keyframes wp-drop{
+  0%{transform:translateY(-8px) scale(.3);opacity:0}
+  60%{transform:translateY(0) scale(1.2);opacity:1}
+  100%{transform:translateY(0) scale(1);opacity:1}
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 7 · POCKET WATCH (click crown to wind, time jumps) */
+/* ─────────────────────────────────────────────────────────── */
+.art-watch{
+  width:200px;height:240px;position:relative;
+  cursor:pointer;user-select:none;
+}
+.art-watch .ring{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid #6B4C30;background:transparent;
+}
+.art-watch .ring::after{
+  content:"";position:absolute;left:50%;top:14px;transform:translateX(-50%);
+  width:2px;height:6px;background:#6B4C30;
+}
+.art-watch .crown{
+  position:absolute;top:18px;left:50%;transform:translateX(-50%);
+  width:18px;height:14px;border-radius:3px 3px 1px 1px;
+  background:radial-gradient(circle at 45% 35%, #f0d4a0, #8B6A48 90%);
+  border:1px solid rgba(60,40,28,.5);
+  box-shadow:0 2px 4px rgba(0,0,0,.3);
+  z-index:3;
+}
+.art-watch.is-winding .crown{animation:wind-crown .4s ease-in-out 3}
+@keyframes wind-crown{
+  0%,100%{transform:translateX(-50%) rotate(0)}
+  50%{transform:translateX(-50%) rotate(80deg)}
+}
+.art-watch .case{
+  position:absolute;top:30px;left:50%;transform:translateX(-50%);
+  width:180px;height:180px;border-radius:50%;
+  background:
+    radial-gradient(circle at 38% 32%, #F5DFA8 0%, #C29960 45%, #7A5630 100%);
+  border:3px solid #6B4C30;
+  box-shadow:
+    0 18px 36px -14px rgba(60,40,28,.55),
+    inset 0 0 0 2px rgba(255,255,255,.2),
+    inset 0 6px 14px rgba(255,255,255,.18),
+    inset 0 -6px 14px rgba(0,0,0,.18);
+}
+.art-watch .face{
+  position:absolute;inset:14px;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 38%, #FBF7EE 0%, #ECE0C4 90%);
+  border:1px solid rgba(60,40,28,.3);
+  display:grid;place-items:center;
+  box-shadow:inset 0 4px 8px rgba(60,40,28,.12);
+}
+/* roman numerals (only at 12, 3, 6, 9 for clarity at small sizes) */
+.art-watch .num{
+  position:absolute;font-family:'Instrument Serif',serif;
+  font-size:.85rem;color:#3c322c;font-style:italic;
+  line-height:1;
+}
+.art-watch .num.n12{top:10px;left:50%;transform:translateX(-50%)}
+.art-watch .num.n3 {right:10px;top:50%;transform:translateY(-50%)}
+.art-watch .num.n6 {bottom:10px;left:50%;transform:translateX(-50%)}
+.art-watch .num.n9 {left:10px;top:50%;transform:translateY(-50%)}
+/* tick marks */
+.art-watch .ticks{position:absolute;inset:0}
+.art-watch .ticks span{
+  position:absolute;left:50%;top:50%;width:2px;height:5px;
+  background:#3c322c;opacity:.5;
+  transform-origin:0 0;
+  transform:translate(-50%,-50%) rotate(var(--a)) translateY(-58px);
+}
+.art-watch .center{
+  position:absolute;left:50%;top:50%;
+  width:7px;height:7px;border-radius:50%;
+  background:#3c322c;
+  transform:translate(-50%,-50%);
+  z-index:4;
+  box-shadow:0 0 0 2px #c29960;
+}
+.art-watch .hand{
+  position:absolute;left:50%;bottom:50%;transform-origin:50% 100%;
+  background:#3c322c;border-radius:2px;z-index:3;
+  transition:transform 1.6s cubic-bezier(.32,.07,.18,1.18);
+}
+.art-watch .hand.hour  {width:4px; height:34px; transform:translateX(-50%) rotate(0deg);   border-radius:2px 2px 0 0}
+.art-watch .hand.minute{width:3px; height:46px; transform:translateX(-50%) rotate(0deg)}
+.art-watch .hand.second{width:1.5px;height:52px;background:#7A1022;transform:translateX(-50%) rotate(0deg)}
+.art-watch .hand.second::after{
+  content:"";position:absolute;top:-3px;left:-2px;
+  width:5px;height:5px;border-radius:50%;background:#7A1022;
+}
+.art-watch .moment{
+  position:absolute;left:0;right:0;bottom:-20px;
+  text-align:center;
+  font-family:'Caveat',cursive;font-size:.86rem;color:var(--ink-soft);opacity:.85;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 8 · CIPHER WHEEL (rotate to decode)                */
+/* ─────────────────────────────────────────────────────────── */
+.art-cipher{
+  width:230px;
+  background:
+    radial-gradient(200px 140px at 50% 0%, rgba(184,137,75,.14), transparent 70%),
+    linear-gradient(180deg,#F5EFE4 0%,#E6D8C0 100%);
+  border:1px solid rgba(139,92,58,.3);
+  box-shadow:0 14px 30px -14px rgba(60,40,28,.45);
+  padding:14px 12px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  user-select:none;
+}
+.art-cipher .wheel-frame{
+  position:relative;width:170px;height:170px;
+}
+/* outer fixed disk */
+.art-cipher .outer{
+  position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle at 35% 30%, #F5DFA8 0%, #B8894B 70%, #7A5630 100%);
+  border:2px solid #6B4C30;
+  box-shadow:inset 0 4px 8px rgba(0,0,0,.2);
+}
+.art-cipher .inner{
+  position:absolute;inset:30px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, #FBF7EE 0%, #E6D8C0 90%);
+  border:2px solid #8B6A48;
+  transition:transform .55s cubic-bezier(.34,.15,.2,1.18);
+  box-shadow:inset 0 0 16px rgba(184,137,75,.18);
+}
+.art-cipher .letter{
+  position:absolute;left:50%;top:50%;
+  font-family:'Instrument Serif',serif;font-size:.62rem;
+  color:#2d1f18;
+  transform-origin:0 0;line-height:1;
+}
+.art-cipher .letter.outer-l{color:#FBF7EE;font-weight:600}
+/* indicator triangle on inner ring pointing up */
+.art-cipher .indicator{
+  position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  width:0;height:0;
+  border-left:7px solid transparent;border-right:7px solid transparent;
+  border-bottom:10px solid var(--terracotta);
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.3));
+}
+.art-cipher .center-jewel{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:14px;height:14px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #B94B4B, #5B0A18);
+  box-shadow:0 1px 3px rgba(0,0,0,.4),inset 0 -1px 2px rgba(0,0,0,.3);
+  z-index:2;
+}
+.art-cipher .controls{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Inter',sans-serif;font-size:.6rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-muted);
+  margin-top:4px;
+}
+.art-cipher .controls button{
+  width:24px;height:24px;border-radius:50%;
+  border:1px solid rgba(139,92,58,.5);background:#FBF7EE;
+  font-family:'Instrument Serif',serif;font-size:.95rem;line-height:1;
+  color:var(--terracotta-deep);cursor:pointer;
+  display:grid;place-items:center;padding:0;
+  transition:all .15s ease;
+}
+.art-cipher .controls button:hover{background:var(--terracotta-wash);border-color:var(--terracotta)}
+.art-cipher .controls button:active{transform:scale(.93)}
+.art-cipher .shift{
+  font-family:'Instrument Serif',serif;font-style:italic;font-size:.95rem;
+  color:var(--terracotta-deep);min-width:2.4em;text-align:center;
+  letter-spacing:0;text-transform:none;
+}
+.art-cipher .decode{
+  font-family:'Courier New',ui-monospace,monospace;
+  font-size:.7rem;color:#2D1F18;
+  letter-spacing:.04em;text-align:center;
+  margin-top:4px;line-height:1.5;
+  width:100%;
+  border-top:1px dashed rgba(139,92,58,.35);
+  padding-top:6px;
+}
+.art-cipher .decode .enc{color:var(--ink-muted);opacity:.75}
+.art-cipher .decode .arrow{margin:0 6px;color:var(--terracotta);font-family:'Instrument Serif',serif}
+.art-cipher .decode .dec{color:var(--terracotta-deep);font-weight:600}
+.art-cipher .decode.is-solved .dec{
+  color:var(--forest);
+  animation:cipher-glow 1.4s ease-in-out;
+}
+@keyframes cipher-glow{
+  0%,100%{text-shadow:none}
+  50%{text-shadow:0 0 8px rgba(61,122,61,.6)}
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 9 · MATCHBOOK (strike a match, flame flickers)     */
+/* ─────────────────────────────────────────────────────────── */
+.art-match{
+  width:170px;height:240px;
+  background:
+    linear-gradient(180deg,#5B3A28 0%,#3A2418 100%);
+  border-radius:6px 6px 10px 10px;
+  box-shadow:
+    0 16px 30px -14px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -3px 8px rgba(0,0,0,.4);
+  padding:14px 14px 12px;position:relative;color:#F5EFE4;
+  display:flex;flex-direction:column;
+  user-select:none;
+}
+.art-match .cover{
+  text-align:center;border-bottom:1px solid rgba(245,239,228,.18);
+  padding-bottom:9px;margin-bottom:10px;
+}
+.art-match .cover .brand{
+  font-family:'Instrument Serif',serif;font-style:italic;font-size:.92rem;
+  color:#F5EFE4;letter-spacing:.02em;
+}
+.art-match .cover .sub{
+  display:block;margin-top:2px;
+  font-family:'Inter',sans-serif;font-size:.46rem;letter-spacing:.32em;
+  text-transform:uppercase;opacity:.55;
+}
+.art-match .matches{
+  flex:1;display:flex;flex-direction:column;gap:7px;
+  justify-content:center;padding:0 4px;
+}
+.art-match .match{
+  position:relative;display:flex;align-items:center;
+  cursor:pointer;height:9px;
+  transition:transform .2s ease;
+}
+.art-match .match:hover:not(.used){transform:translateX(2px)}
+.art-match .stem{
+  flex:1;height:3px;border-radius:1px;
+  background:linear-gradient(90deg,#EFE4D2,#D8C08A);
+  box-shadow:0 1px 0 rgba(0,0,0,.25);
+}
+.art-match .head{
+  width:11px;height:11px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#ff8a5a,#a01818 75%);
+  box-shadow:0 1px 2px rgba(0,0,0,.4);
+  flex-shrink:0;
+  position:relative;z-index:2;
+}
+.art-match .match.used .stem{
+  background:linear-gradient(90deg,#5b4a3a,#2A1810);opacity:.5;
+}
+.art-match .match.used .head{
+  background:radial-gradient(circle at 30% 30%,#3a2418,#1a0e08);
+  opacity:.8;
+}
+/* the lit flame floats above the burning match */
+.art-match .match.lit .head::before{
+  content:"";position:absolute;
+  left:50%;bottom:8px;transform:translateX(-50%);
+  width:14px;height:22px;
+  background:
+    radial-gradient(ellipse at 50% 90%, #fff3b0 0%, #ffd34b 25%, #ff8a3a 55%, #c8311a 90%);
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  filter:blur(.4px);
+  animation:flame-flicker .42s ease-in-out infinite alternate;
+  pointer-events:none;
+  box-shadow:0 0 14px rgba(255,196,80,.6);
+}
+.art-match .match.lit .head::after{
+  content:"";position:absolute;
+  left:50%;bottom:10px;transform:translateX(-50%);
+  width:6px;height:10px;
+  background:radial-gradient(ellipse at 50% 80%, #b9d4ff 0%, #6b8acc 60%, transparent 80%);
+  border-radius:50%;
+  pointer-events:none;
+  animation:flame-flicker .42s ease-in-out infinite alternate-reverse;
+}
+@keyframes flame-flicker{
+  0%  {transform:translateX(-50%) scale(.95) rotate(-3deg);opacity:.92}
+  100%{transform:translateX(-50%) scale(1.08) rotate(4deg); opacity:1}
+}
+.art-match .striker{
+  margin-top:8px;height:18px;border-radius:2px;
+  background:
+    repeating-linear-gradient(45deg,#2A1810 0 2px, #3A2418 2px 4px);
+  border:1px solid rgba(0,0,0,.55);
+  text-align:center;
+  font-family:'Inter',sans-serif;font-size:.5rem;letter-spacing:.24em;
+  line-height:18px;color:rgba(245,239,228,.55);
+}
+.art-match .counter{
+  text-align:center;margin-top:8px;
+  font-family:'Inter',sans-serif;font-size:.55rem;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(245,239,228,.65);
+}
+.art-match .counter b{
+  color:#ffd34b;font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:.75rem;letter-spacing:0;margin-right:4px;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  ARTIFACT 10 · MUSIC BOX (wind key, lid opens, notes float)  */
+/* ─────────────────────────────────────────────────────────── */
+.art-box{
+  width:220px;height:240px;
+  position:relative;cursor:pointer;user-select:none;
+}
+/* the box body */
+.art-box .body{
+  position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+  width:200px;height:130px;
+  background:
+    linear-gradient(180deg,#A06D48 0%,#6B4426 60%, #4A2E18 100%);
+  border-radius:6px 6px 4px 4px;
+  box-shadow:
+    0 18px 30px -14px rgba(0,0,0,.55),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -4px 10px rgba(0,0,0,.35);
+  border:1px solid rgba(0,0,0,.35);
+}
+.art-box .body::before{
+  content:"";position:absolute;inset:8px;
+  border:1px solid rgba(245,239,228,.3);
+  border-radius:3px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 6px, rgba(245,239,228,.04) 6px 7px);
+}
+.art-box .body::after{
+  content:"M";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:1.7rem;color:rgba(245,239,228,.4);
+}
+/* the lid */
+.art-box .lid{
+  position:absolute;left:50%;bottom:138px;transform:translateX(-50%) rotateX(0);
+  width:200px;height:30px;
+  background:linear-gradient(180deg,#B6815A 0%,#7a5230 100%);
+  border-radius:6px 6px 0 0;
+  border:1px solid rgba(0,0,0,.35);
+  transform-origin:bottom center;
+  transition:transform .8s cubic-bezier(.4,.15,.2,1.2);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18);
+}
+.art-box .lid::before{
+  content:"";position:absolute;inset:4px 8px;
+  border:1px solid rgba(245,239,228,.3);border-radius:3px;
+}
+.art-box.is-open .lid{transform:translateX(-50%) rotateX(-115deg)}
+
+/* winding key on the right side */
+.art-box .key{
+  position:absolute;right:6px;bottom:60px;
+  width:40px;height:14px;
+  transform-origin:6px center;
+  z-index:2;
+}
+.art-box .key .shaft{
+  position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:24px;height:3px;
+  background:linear-gradient(180deg,#d4b580,#8B6A48);
+  border-radius:1px;
+}
+.art-box .key .head{
+  position:absolute;right:0;top:50%;transform:translateY(-50%);
+  width:18px;height:14px;
+  background:radial-gradient(circle at 35% 35%, #f0d4a0, #8B6A48 75%);
+  border-radius:50%;border:1px solid rgba(60,40,28,.5);
+}
+.art-box .key .head::before,
+.art-box .key .head::after{
+  content:"";position:absolute;left:50%;top:50%;
+  background:#5B3A28;border-radius:1px;
+}
+.art-box .key .head::before{
+  width:14px;height:2px;transform:translate(-50%,-50%);
+}
+.art-box .key .head::after{
+  width:2px;height:14px;transform:translate(-50%,-50%);
+}
+.art-box.is-winding .key{animation:wind-key 1.1s linear 2}
+@keyframes wind-key{to{transform:rotate(360deg)}}
+
+/* ballerina silhouette rises from inside the box when lid is open */
+.art-box .dancer{
+  position:absolute;left:50%;bottom:135px;
+  width:24px;height:54px;
+  transform:translateX(-50%) translateY(20px) scale(0);
+  transform-origin:bottom center;
+  transition:transform .55s cubic-bezier(.4,.15,.2,1.25) .35s;
+  z-index:1;
+  pointer-events:none;
+}
+.art-box .dancer svg{width:100%;height:100%;display:block}
+.art-box.is-open .dancer{
+  transform:translateX(-50%) translateY(-12px) scale(1);
+  animation:dancer-spin 3.6s linear infinite .9s;
+}
+@keyframes dancer-spin{
+  0%  {transform:translateX(-50%) translateY(-12px) scale(1) rotateY(0)}
+  100%{transform:translateX(-50%) translateY(-12px) scale(1) rotateY(360deg)}
+}
+
+/* musical notes float upward when playing */
+.art-box .notes{
+  position:absolute;left:0;right:0;top:0;bottom:0;
+  pointer-events:none;overflow:visible;
+}
+.art-box .note{
+  position:absolute;bottom:140px;left:50%;
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:1.3rem;
+  color:var(--terracotta);
+  opacity:0;
+  text-shadow:0 1px 2px rgba(0,0,0,.15);
+}
+.art-box.is-open .note{
+  animation:note-float 2.6s ease-in-out infinite;
+}
+.art-box .note:nth-child(1){animation-delay:0s;   transform:translateX(-50%)}
+.art-box .note:nth-child(2){animation-delay:.6s;  transform:translateX(-150%); color:var(--ochre)}
+.art-box .note:nth-child(3){animation-delay:1.2s; transform:translateX(80%);    color:var(--plum)}
+.art-box .note:nth-child(4){animation-delay:1.8s; transform:translateX(-220%);  color:var(--sage)}
+@keyframes note-float{
+  0%   {opacity:0; bottom:140px; transform:translateX(var(--dx,-50%)) rotate(-8deg) scale(.6)}
+  20%  {opacity:.95}
+  100% {opacity:0; bottom:200px; transform:translateX(var(--dx,-50%)) translateY(-50px) rotate(12deg) scale(1.1)}
+}
+.art-box .winding-hint{
+  position:absolute;bottom:-22px;left:0;right:0;text-align:center;
+  font-family:'Caveat',cursive;font-size:.84rem;color:var(--ink-soft);
+  opacity:.75;transition:opacity .3s ease;
+}
+.art-box.is-open .winding-hint{opacity:0}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Reduced motion + focus                                      */
+/* ─────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+}
+[role="button"]:focus-visible,
+button:focus-visible{
+  outline:2px solid var(--terracotta);
+  outline-offset:3px;
+}
+::selection{background:var(--terracotta-wash);color:var(--terracotta-deep)}
+
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="gallery-header">
+    <div class="eyebrow">
+      <span class="num">x.</span>
+      <span>The Artifact Agent · Gallery</span>
+      <span class="num">x.</span>
+    </div>
+    <h1>Ten props the reader can <em>hold</em>.</h1>
+    <p class="lede">
+      A representative gallery of artifacts produced by the Artifact Agent across one
+      story session. Each artifact is a self-contained, interactive prop —
+      tagged by <em>format</em>, <em>visual style</em>, and <em>interaction pattern</em> —
+      and checked against recent outputs so it never repeats itself.
+    </p>
+    <div class="rule"></div>
+  </header>
+
+  <section class="gallery">
+
+    <!-- ═══ I · LETTER ════════════════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">I</span></div>
+      <div class="stage">
+        <div class="art-letter" id="letter" role="button" tabindex="0" aria-label="Unfold the letter">
+          <div class="l-back"></div>
+          <div class="l-page">
+            my dearest —<br/>
+            if you are reading this, the lighthouse has not yet fallen.
+            follow the shore east, past the old cedar, until dawn.
+            <span class="sig">— Elin</span>
+          </div>
+          <div class="l-flap"></div>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A letter <em>unfolds</em></div>
+        <span class="latin">from Elin, keeper of the light</span>
+        <span class="badge">click to open</span>
+      </div>
+    </div>
+
+    <!-- ═══ II · POLAROID ════════════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">II</span></div>
+      <div class="stage">
+        <div class="art-polaroid" id="polaroid" data-scene="1" role="button" tabindex="0" aria-label="Shake and develop the polaroid">
+          <span class="scene-count">01 / 03</span>
+          <div class="photo"></div>
+          <div class="cap">shake to develop</div>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A polaroid <em>develops</em></div>
+        <span class="latin">found inside the desk drawer</span>
+        <span class="badge">click · cycles 3 photos</span>
+      </div>
+    </div>
+
+    <!-- ═══ III · HERBARIUM ══════════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">III</span></div>
+      <div class="stage">
+        <div class="art-herb-wrap" id="herb" role="button" tabindex="0" aria-label="Flip the specimen card">
+          <div class="art-herb">
+            <div class="face front">
+              <div class="sprig">
+                <svg viewBox="0 0 120 160" fill="none" aria-hidden="true">
+                  <g stroke="#6B8E6F" stroke-width="1" stroke-linecap="round">
+                    <path d="M60 150 Q 58 110 60 70 Q 62 50 60 24"/>
+                    <path d="M60 120 Q 44 118 36 110" opacity=".9"/>
+                    <path d="M60 120 Q 76 118 84 110" opacity=".9"/>
+                    <path d="M60 96 Q 44 94 34 84" opacity=".85"/>
+                    <path d="M60 96 Q 76 94 86 84" opacity=".85"/>
+                    <path d="M60 74 Q 46 72 38 62" opacity=".8"/>
+                    <path d="M60 74 Q 74 72 82 62" opacity=".8"/>
+                  </g>
+                  <g fill="#8FAE91" fill-opacity=".45" stroke="#5d7a62" stroke-width=".5">
+                    <ellipse cx="42" cy="114" rx="10" ry="4" transform="rotate(-20 42 114)"/>
+                    <ellipse cx="78" cy="114" rx="10" ry="4" transform="rotate(20 78 114)"/>
+                    <ellipse cx="40" cy="90"  rx="11" ry="4.5" transform="rotate(-20 40 90)"/>
+                    <ellipse cx="80" cy="90"  rx="11" ry="4.5" transform="rotate(20 80 90)"/>
+                    <ellipse cx="44" cy="68"  rx="9"  ry="3.5" transform="rotate(-20 44 68)"/>
+                    <ellipse cx="76" cy="68"  rx="9"  ry="3.5" transform="rotate(20 76 68)"/>
+                  </g>
+                  <g fill="#9A7BA8" fill-opacity=".7" stroke="#6b4f79" stroke-width=".4">
+                    <ellipse cx="60" cy="20" rx="3"  ry="5"/>
+                    <ellipse cx="56" cy="14" rx="2.5" ry="4"/>
+                    <ellipse cx="64" cy="14" rx="2.5" ry="4"/>
+                    <ellipse cx="58" cy="8"  rx="2.2" ry="3.5"/>
+                    <ellipse cx="62" cy="8"  rx="2.2" ry="3.5"/>
+                    <ellipse cx="60" cy="2"  rx="2"  ry="3"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="latin">
+                Lavandula angustifolia
+                <span class="sub">pressed · chapter II · harbor</span>
+              </div>
+              <span class="flip-hint">flip ↻</span>
+            </div>
+            <div class="face back">
+              <span class="pin" aria-hidden="true"></span>
+              <div class="notes">
+                <span class="lbl">field notes</span>
+                Found where the east path
+                meets the cliff — pressed
+                between pages forty-seven
+                and forty-eight of her journal.
+              </div>
+              <div class="stamp"><span><b>1923</b>APR&nbsp;·&nbsp;14</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A sprig <em>pressed</em></div>
+        <span class="latin">between the pages of her journal</span>
+        <span class="badge">click · 3D flip</span>
+      </div>
+    </div>
+
+    <!-- ═══ IV · CASSETTE ════════════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">IV</span></div>
+      <div class="stage">
+        <div class="art-tape" id="cassette">
+          <div class="label">
+            <b>Side A</b>
+            <i>songs for a slow return</i>
+            <span class="timer">00:00 / 03:24</span>
+          </div>
+          <div class="reels">
+            <div class="reel"></div>
+            <div class="reel-gap"></div>
+            <div class="reel"></div>
+          </div>
+          <div class="controls">
+            <div class="play-btn" role="button" tabindex="0" aria-label="Play or pause the cassette">
+              <span class="icon"></span>
+            </div>
+            <div class="vu" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A cassette <em>plays</em></div>
+        <span class="latin">left inside the glovebox, unlabelled</span>
+        <span class="badge">press play ▶</span>
+      </div>
+    </div>
+
+    <!-- ═══ V · TELEGRAM ═════════════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">V</span></div>
+      <div class="stage">
+        <div class="art-tel" id="telegram" role="button" tabindex="0" aria-label="Receive the next telegram">
+          <div class="head">
+            <span class="label">TELEGRAM · URGENT</span>
+            <span class="no">№ <b class="idx">01</b>/04</span>
+          </div>
+          <div class="body"></div>
+          <span class="stamp">sent 03:17</span>
+          <span class="next-hint">next ↗</span>
+          <span class="rcvd">RECEIVED</span>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A telegram <em>arrives</em></div>
+        <span class="latin">pushed under the door at dawn</span>
+        <span class="badge">click for next message</span>
+      </div>
+    </div>
+
+    <!-- ═══ VI · MAP ═════════════════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">VI</span></div>
+      <div class="stage">
+        <div class="art-map" id="map" role="button" tabindex="0" aria-label="Click the map to plant a waypoint">
+          <svg viewBox="0 0 240 192" fill="none" aria-hidden="true">
+            <defs>
+              <symbol id="wp-mark" viewBox="-8 -8 16 16">
+                <circle r="5" fill="#7A1022" fill-opacity=".85" stroke="#fbf7ee" stroke-width="1.2"/>
+                <circle r="1.6" fill="#fbf7ee"/>
+              </symbol>
+            </defs>
+            <g stroke="#5a3e2e" stroke-width="1" fill="none" stroke-linecap="round">
+              <path d="M14 40 Q 40 36 60 50 Q 82 70 72 92 Q 60 112 88 126 Q 118 140 154 130 Q 186 120 210 136" opacity=".55"/>
+              <path d="M14 40 Q 40 36 60 50 Q 82 70 72 92 Q 60 112 88 126 Q 118 140 154 130 Q 186 120 210 136 L 226 176 L 14 176 Z" fill="#c6a57a" fill-opacity=".35" stroke="none"/>
+              <path id="trail" d="M30 156 Q 80 146 120 136 Q 160 126 186 106 Q 200 94 194 78" stroke-dasharray="2 4" stroke="#7A1022" stroke-width="1" opacity=".8"/>
+              <path d="M88 156 Q 100 148 110 152" opacity=".3"/>
+              <path d="M140 148 Q 156 142 168 146" opacity=".3"/>
+            </g>
+            <g class="x" transform="translate(194 78)">
+              <path d="M-8 -8 L 8 8 M 8 -8 L -8 8" stroke="#7A1022" stroke-width="2" stroke-linecap="round"/>
+              <circle r="12" stroke="#7A1022" stroke-width="1" stroke-dasharray="2 3" fill="none" opacity=".6"/>
+            </g>
+            <g id="waypoints"></g>
+            <g transform="translate(46 48)">
+              <circle r="20" stroke="#5a3e2e" stroke-width="1" fill="#FBF7EE" fill-opacity=".5"/>
+              <circle r="14" stroke="#5a3e2e" stroke-width=".4" fill="none" opacity=".6"/>
+              <text x="0" y="-22" text-anchor="middle" font-family="Instrument Serif" font-style="italic" font-size="8" fill="#5a3e2e">N</text>
+              <text x="22" y="3"  text-anchor="middle" font-family="Instrument Serif" font-style="italic" font-size="7" fill="#5a3e2e" opacity=".6">E</text>
+              <text x="0" y="26"  text-anchor="middle" font-family="Instrument Serif" font-style="italic" font-size="7" fill="#5a3e2e" opacity=".6">S</text>
+              <text x="-22" y="3" text-anchor="middle" font-family="Instrument Serif" font-style="italic" font-size="7" fill="#5a3e2e" opacity=".6">W</text>
+              <g class="needle">
+                <path d="M0 -14 L 3 0 L 0 14 L -3 0 Z" fill="#7A1022"/>
+                <path d="M0 -14 L 3 0 L -3 0 Z" fill="#5B0A18"/>
+                <circle r="1.6" fill="#2D1F18"/>
+              </g>
+            </g>
+          </svg>
+          <div class="counter"><b class="n">0</b>marks planted</div>
+          <div class="legend">tap any spot · compass will follow</div>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A map <em>marked</em></div>
+        <span class="latin">found folded inside the telegram</span>
+        <span class="badge">click to plant waypoints</span>
+      </div>
+    </div>
+
+    <!-- ═══ VII · POCKET WATCH ═══════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">VII</span></div>
+      <div class="stage">
+        <div class="art-watch" id="watch" role="button" tabindex="0" aria-label="Wind the pocket watch to advance time">
+          <div class="ring"></div>
+          <div class="crown"></div>
+          <div class="case">
+            <div class="face">
+              <div class="ticks">
+                <!-- 12 tick marks placed via inline style -->
+                <span style="--a: 0deg"></span>
+                <span style="--a: 30deg"></span>
+                <span style="--a: 60deg"></span>
+                <span style="--a: 90deg"></span>
+                <span style="--a: 120deg"></span>
+                <span style="--a: 150deg"></span>
+                <span style="--a: 180deg"></span>
+                <span style="--a: 210deg"></span>
+                <span style="--a: 240deg"></span>
+                <span style="--a: 270deg"></span>
+                <span style="--a: 300deg"></span>
+                <span style="--a: 330deg"></span>
+              </div>
+              <span class="num n12">XII</span>
+              <span class="num n3">III</span>
+              <span class="num n6">VI</span>
+              <span class="num n9">IX</span>
+              <div class="hand hour"></div>
+              <div class="hand minute"></div>
+              <div class="hand second"></div>
+              <div class="center"></div>
+            </div>
+          </div>
+          <div class="moment">moment <span class="m-idx">i</span> of iv · <span class="m-time">03:17</span></div>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A watch <em>winds</em></div>
+        <span class="latin">stopped at the hour she vanished</span>
+        <span class="badge">click crown · advance time</span>
+      </div>
+    </div>
+
+    <!-- ═══ VIII · CIPHER WHEEL ══════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">VIII</span></div>
+      <div class="stage">
+        <div class="art-cipher" id="cipher">
+          <div class="wheel-frame">
+            <div class="outer" id="cipher-outer"></div>
+            <div class="inner" id="cipher-inner">
+              <span class="indicator" aria-hidden="true"></span>
+            </div>
+            <span class="center-jewel"></span>
+          </div>
+          <div class="controls">
+            <button type="button" class="rot-l" aria-label="Rotate counter-clockwise">‹</button>
+            <span class="shift">shift &nbsp;<b>+0</b></span>
+            <button type="button" class="rot-r" aria-label="Rotate clockwise">›</button>
+          </div>
+          <div class="decode" id="cipher-decode">
+            <span class="enc">PHHW DW SLHU</span>
+            <span class="arrow">→</span>
+            <span class="dec">PHHW DW SLHU</span>
+          </div>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A cipher <em>turns</em></div>
+        <span class="latin">a Caesar wheel hidden in the journal</span>
+        <span class="badge">rotate to decode (+3)</span>
+      </div>
+    </div>
+
+    <!-- ═══ IX · MATCHBOOK ═══════════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">IX</span></div>
+      <div class="stage">
+        <div class="art-match" id="match">
+          <div class="cover">
+            <div class="brand">The Cedar &amp; Crane</div>
+            <span class="sub">Harbor Lounge · est. 1920</span>
+          </div>
+          <div class="matches">
+            <div class="match" data-i="0"><div class="stem"></div><div class="head"></div></div>
+            <div class="match" data-i="1"><div class="stem"></div><div class="head"></div></div>
+            <div class="match" data-i="2"><div class="stem"></div><div class="head"></div></div>
+            <div class="match" data-i="3"><div class="stem"></div><div class="head"></div></div>
+            <div class="match" data-i="4"><div class="stem"></div><div class="head"></div></div>
+            <div class="match" data-i="5"><div class="stem"></div><div class="head"></div></div>
+          </div>
+          <div class="striker">strike here</div>
+          <div class="counter"><b class="n">6</b>matches remaining</div>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A matchbook <em>strikes</em></div>
+        <span class="latin">picked up at a harbor lounge</span>
+        <span class="badge">click · light each match</span>
+      </div>
+    </div>
+
+    <!-- ═══ X · MUSIC BOX ════════════════════════════════════ -->
+    <div class="plate"><span class="corner-bl"></span><span class="corner-br"></span>
+      <div class="plate-no">Plate <span class="roman">X</span></div>
+      <div class="stage">
+        <div class="art-box" id="box" role="button" tabindex="0" aria-label="Wind the music box and open the lid">
+          <div class="lid"></div>
+          <div class="dancer">
+            <svg viewBox="0 0 24 60" fill="none" aria-hidden="true">
+              <!-- minimal ballerina silhouette -->
+              <ellipse cx="12" cy="6" rx="3.5" ry="4.5" fill="#3c322c"/>
+              <path d="M12 10 L 12 32" stroke="#3c322c" stroke-width="2.4" stroke-linecap="round"/>
+              <path d="M12 16 Q 4 18 2 28" stroke="#3c322c" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M12 16 Q 20 18 22 28" stroke="#3c322c" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M12 30 L 6 56 L 18 56 Z" fill="#7A1022" opacity=".75"/>
+              <path d="M12 30 L 12 56" stroke="#3c322c" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <div class="body"></div>
+          <div class="key"><span class="shaft"></span><span class="head"></span></div>
+          <div class="notes">
+            <span class="note" style="--dx:-50%">♩</span>
+            <span class="note" style="--dx:-150%">♪</span>
+            <span class="note" style="--dx:80%">♫</span>
+            <span class="note" style="--dx:-220%">♬</span>
+          </div>
+          <div class="winding-hint">click the key to wind</div>
+        </div>
+      </div>
+      <div class="caption">
+        <div class="name">A music box <em>opens</em></div>
+        <span class="latin">a lullaby she meant for him</span>
+        <span class="badge">click · wind &amp; play</span>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="gallery-footer">
+    <span class="figref">Figure · the artifact agent</span>
+    Each plate is a stand-alone HTML/CSS prop generated from story state, tagged with a
+    <em>format</em> (letter, photograph, recording, …), a <em>visual style</em>
+    (worn paper, sepia, hand-pressed, …), and an <em>interaction pattern</em>
+    (open, develop, flip, play, decode, light, wind). The Artifact Agent
+    inspects the last six accepted props and refuses to repeat any of them.
+  </footer>
+
+</div>
+
+<script>
+/* ────────────────────────────────────────────────────────── */
+/*  Helpers                                                    */
+/* ────────────────────────────────────────────────────────── */
+const kbToggle = (el, fn)=>{
+  el.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fn(e); }
+  });
+};
+
+/* ────────────────────────────────────────────────────────── */
+/*  1 · LETTER                                                 */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const letter = document.getElementById('letter');
+  if(!letter) return;
+  const toggle = ()=>letter.classList.toggle('is-open');
+  letter.addEventListener('click', toggle);
+  kbToggle(letter, toggle);
+})();
+
+/* ────────────────────────────────────────────────────────── */
+/*  2 · POLAROID                                               */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const polaroid = document.getElementById('polaroid');
+  if(!polaroid) return;
+  const scenes = [
+    { cap:'the lighthouse, at dusk' },
+    { cap:'the harbor, 06:04' },
+    { cap:'the letter on her desk' },
+  ];
+  let idx = 0, developing = false;
+  const cap = polaroid.querySelector('.cap');
+  const count = polaroid.querySelector('.scene-count');
+
+  const act = ()=>{
+    if(developing) return;
+    developing = true;
+    polaroid.classList.add('is-shaking');
+    cap.textContent = 'developing…';
+    setTimeout(()=>{
+      polaroid.classList.remove('is-shaking');
+      polaroid.dataset.scene = String(idx+1);
+      polaroid.classList.add('is-developed');
+      cap.textContent = scenes[idx].cap;
+      count.textContent = `0${idx+1} / 0${scenes.length}`;
+      idx = (idx + 1) % scenes.length;
+      developing = false;
+    }, 620);
+  };
+  polaroid.addEventListener('click', act);
+  kbToggle(polaroid, act);
+})();
+
+/* ────────────────────────────────────────────────────────── */
+/*  3 · HERBARIUM                                              */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const herb = document.getElementById('herb');
+  if(!herb) return;
+  const inner = herb.querySelector('.art-herb');
+  const flip = ()=>inner.classList.toggle('is-flipped');
+  herb.addEventListener('click', flip);
+  kbToggle(herb, flip);
+})();
+
+/* ────────────────────────────────────────────────────────── */
+/*  4 · CASSETTE                                               */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const cassette = document.getElementById('cassette');
+  if(!cassette) return;
+  const btn = cassette.querySelector('.play-btn');
+  const timer = cassette.querySelector('.timer');
+  const total = 3*60 + 24;
+  let seconds = 0, timerId = null, playing = false;
+
+  const fmt = (s)=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+  const render = ()=>{ timer.textContent = `${fmt(seconds)} / 03:24`; };
+  const stop = ()=>{
+    playing = false;
+    cassette.classList.remove('is-playing');
+    if(timerId){ clearInterval(timerId); timerId = null; }
+  };
+  const play = ()=>{
+    playing = true;
+    cassette.classList.add('is-playing');
+    timerId = setInterval(()=>{
+      seconds = (seconds + 1) % (total + 1);
+      if(seconds === total){ stop(); seconds = 0; }
+      render();
+    }, 1000);
+  };
+  const toggle = (e)=>{
+    if(e) e.stopPropagation();
+    playing ? stop() : play();
+  };
+  btn.addEventListener('click', toggle);
+  kbToggle(btn, toggle);
+  render();
+})();
+
+/* ────────────────────────────────────────────────────────── */
+/*  5 · TELEGRAM                                               */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const telegram = document.getElementById('telegram');
+  if(!telegram) return;
+  const messages = [
+    { stamp:'sent 03:17',  lines:['ARRIVE BY DAWN STOP','MEET AT PIER STOP','BRING THE LETTER STOP','ALL WELL — E.'] },
+    { stamp:'sent 06:42',  lines:['LIGHT IS OUT STOP','EAST SHORE FLOODED STOP','USE THE CEDAR PATH STOP','HURRY — E.'] },
+    { stamp:'sent 11:08',  lines:['SAFE AT THE COVE STOP','THE BOAT IS WAITING STOP','KEEP YOUR VOICE LOW STOP','— E.'] },
+    { stamp:'sent 14:53',  lines:['ALL DEBTS SETTLED STOP','COME HOME NOW STOP','COME HOME — E.'] },
+  ];
+  const body = telegram.querySelector('.body');
+  const idxEl = telegram.querySelector('.idx');
+  const stamp = telegram.querySelector('.stamp');
+  let cursor = 0, busy = false;
+
+  const render = ()=>{
+    busy = true;
+    const m = messages[cursor];
+    idxEl.textContent = String(cursor+1).padStart(2,'0');
+    stamp.textContent = m.stamp;
+    body.innerHTML = '';
+    m.lines.forEach(text=>{
+      const span = document.createElement('span');
+      span.className = 'line';
+      span.textContent = text;
+      body.appendChild(span);
+    });
+    telegram.classList.remove('is-arriving');
+    void telegram.offsetWidth;
+    telegram.classList.add('is-arriving');
+    const lines = [...body.querySelectorAll('.line')];
+    let i = 0;
+    const typeNext = ()=>{
+      if(i >= lines.length){ busy = false; return; }
+      const el = lines[i];
+      el.classList.add('type');
+      setTimeout(()=>{
+        el.classList.remove('type');
+        el.classList.add('typed');
+        i++;
+        typeNext();
+      }, 870);
+    };
+    typeNext();
+  };
+
+  const next = ()=>{
+    if(busy) return;
+    cursor = (cursor + 1) % messages.length;
+    render();
+  };
+  telegram.addEventListener('click', next);
+  kbToggle(telegram, next);
+  render();
+})();
+
+/* ────────────────────────────────────────────────────────── */
+/*  6 · MAP                                                    */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const map = document.getElementById('map');
+  if(!map) return;
+  const svg = map.querySelector('svg');
+  const wrap = map.querySelector('#waypoints');
+  const needle = map.querySelector('.needle');
+  const n = map.querySelector('.counter .n');
+  const legend = map.querySelector('.legend');
+  let count = 0;
+  const CX = 46, CY = 48;
+
+  const plant = (evt)=>{
+    const rect = svg.getBoundingClientRect();
+    const vb = svg.viewBox.baseVal;
+    const x = ((evt.clientX - rect.left) / rect.width)  * vb.width;
+    const y = ((evt.clientY - rect.top)  / rect.height) * vb.height;
+    if(Math.hypot(x-CX, y-CY) < 22) return;
+
+    const use = document.createElementNS('http://www.w3.org/2000/svg','use');
+    use.setAttributeNS('http://www.w3.org/1999/xlink','href','#wp-mark');
+    use.setAttribute('href','#wp-mark');
+    use.setAttribute('x', x - 8);
+    use.setAttribute('y', y - 8);
+    use.setAttribute('width', 16);
+    use.setAttribute('height', 16);
+    use.setAttribute('class','wp');
+    wrap.appendChild(use);
+
+    const angle = Math.atan2(x - CX, -(y - CY)) * 180 / Math.PI;
+    needle.style.transform = `rotate(${angle}deg)`;
+
+    count++;
+    n.textContent = count;
+    if(count === 1){ legend.textContent = 'compass locked to latest mark'; }
+    if(count >= 6){ legend.textContent = 'enough clues to begin'; }
+  };
+  map.addEventListener('click', plant);
+})();
+
+/* ────────────────────────────────────────────────────────── */
+/*  7 · POCKET WATCH                                           */
+/*    click → crown winds → hands race to the next "moment"    */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const watch = document.getElementById('watch');
+  if(!watch) return;
+  const moments = [
+    { label:'i',  time:'03:17', h:3,  m:17 },
+    { label:'ii', time:'06:42', h:6,  m:42 },
+    { label:'iii',time:'11:08', h:11, m:8  },
+    { label:'iv', time:'14:53', h:14, m:53 },
+  ];
+  const hour   = watch.querySelector('.hand.hour');
+  const minute = watch.querySelector('.hand.minute');
+  const second = watch.querySelector('.hand.second');
+  const idxEl  = watch.querySelector('.m-idx');
+  const tEl    = watch.querySelector('.m-time');
+
+  let i = 0;
+  // accumulated rotation so the hands always wind forward (never snap back)
+  let hRot = 0, mRot = 0, sRot = 0;
+  // start at moment 0 visually
+  const setHands = (h, m)=>{
+    // target degrees for the moment
+    const targetH = (h % 12) * 30 + (m / 60) * 30;
+    const targetM = (m % 60) * 6;
+    // how many full extra spins to add (drama)
+    const hSpins = 1, mSpins = 4, sSpins = 8;
+    // increment so we always go forward
+    const advance = (current, target, spins)=>{
+      const cur = current % 360;
+      let delta = (target - cur + 360) % 360;
+      if(delta < 1) delta = 360;
+      return current + spins*360 + delta;
+    };
+    hRot = advance(hRot, targetH, hSpins);
+    mRot = advance(mRot, targetM, mSpins);
+    sRot = sRot + sSpins*360 + 360; // second hand always whirs
+    hour.style.transform   = `translateX(-50%) rotate(${hRot}deg)`;
+    minute.style.transform = `translateX(-50%) rotate(${mRot}deg)`;
+    second.style.transform = `translateX(-50%) rotate(${sRot}deg)`;
+  };
+  // initialise display at moment i=0 without animation
+  setHands(moments[0].h, moments[0].m);
+
+  const wind = ()=>{
+    if(watch.classList.contains('is-winding')) return;
+    i = (i + 1) % moments.length;
+    const m = moments[i];
+    watch.classList.add('is-winding');
+    setHands(m.h, m.m);
+    idxEl.textContent = m.label;
+    tEl.textContent   = m.time;
+    setTimeout(()=>watch.classList.remove('is-winding'), 1200);
+  };
+  watch.addEventListener('click', wind);
+  kbToggle(watch, wind);
+})();
+
+/* ────────────────────────────────────────────────────────── */
+/*  8 · CIPHER WHEEL                                           */
+/*    click ‹ / › to rotate inner ring; live caesar decode     */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const cipher = document.getElementById('cipher');
+  if(!cipher) return;
+  const outerEl = document.getElementById('cipher-outer');
+  const innerEl = document.getElementById('cipher-inner');
+  const decode  = document.getElementById('cipher-decode');
+  const decEl   = decode.querySelector('.dec');
+  const shiftEl = cipher.querySelector('.shift b');
+  const btnL    = cipher.querySelector('.rot-l');
+  const btnR    = cipher.querySelector('.rot-r');
+
+  const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const ENC   = 'PHHW DW SLHU'; // shift +3 → MEET AT PIER
+
+  // populate letters around both rings
+  // outer ring radius ≈ 70px (within 170px frame); inner ring radius ≈ 48px
+  const placeLetters = (host, radius, cls)=>{
+    for(let i = 0; i < 26; i++){
+      const angle = (i / 26) * 360 - 90; // start at top
+      const rad   = angle * Math.PI / 180;
+      const x = Math.cos(rad) * radius;
+      const y = Math.sin(rad) * radius;
+      const span = document.createElement('span');
+      span.className = 'letter ' + cls;
+      span.textContent = ALPHA[i];
+      span.style.transform =
+        `translate(-50%,-50%) translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) rotate(${(angle+90).toFixed(1)}deg)`;
+      host.appendChild(span);
+    }
+  };
+  placeLetters(outerEl, 72, 'outer-l');
+  placeLetters(innerEl, 48, 'inner-l');
+
+  let shift = 0;
+  const STEP = 360 / 26;
+
+  const decodeText = (txt, s)=>{
+    return txt.split('').map(ch=>{
+      const i = ALPHA.indexOf(ch);
+      if(i < 0) return ch;
+      // user "decodes": apply -s
+      const j = (i - s + 26*26) % 26;
+      return ALPHA[j];
+    }).join('');
+  };
+
+  const render = ()=>{
+    innerEl.style.transform = `rotate(${(shift * STEP).toFixed(2)}deg)`;
+    const sign = shift >= 0 ? '+' : '';
+    shiftEl.textContent = `${sign}${shift}`;
+    const out = decodeText(ENC, shift);
+    decEl.textContent = out;
+    if(out === 'MEET AT PIER'){
+      decode.classList.add('is-solved');
+    } else {
+      decode.classList.remove('is-solved');
+    }
+  };
+
+  btnL.addEventListener('click', ()=>{
+    shift = ((shift - 1) % 26 + 26) % 26;
+    if(shift > 13) shift -= 26;
+    render();
+  });
+  btnR.addEventListener('click', ()=>{
+    shift = ((shift + 1) % 26 + 26) % 26;
+    if(shift > 13) shift -= 26;
+    render();
+  });
+  // keyboard: focus the wheel + use arrow keys
+  cipher.tabIndex = 0;
+  cipher.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowLeft'){ btnL.click(); e.preventDefault(); }
+    if(e.key === 'ArrowRight'){ btnR.click(); e.preventDefault(); }
+  });
+
+  render();
+})();
+
+/* ────────────────────────────────────────────────────────── */
+/*  9 · MATCHBOOK                                              */
+/*    click any unused match → it lights, count drops          */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const book  = document.getElementById('match');
+  if(!book) return;
+  const items = [...book.querySelectorAll('.match')];
+  const nEl   = book.querySelector('.counter .n');
+  let remaining = items.length;
+
+  items.forEach(m=>{
+    m.addEventListener('click', ()=>{
+      if(m.classList.contains('used')) return;
+      m.classList.add('lit');
+      // burn down after a moment, becomes "used"
+      setTimeout(()=>{
+        m.classList.remove('lit');
+        m.classList.add('used');
+        remaining = Math.max(0, remaining - 1);
+        nEl.textContent = String(remaining);
+        if(remaining === 0){
+          book.querySelector('.counter').innerHTML = '<b>0</b>out of matches';
+        }
+      }, 2400);
+    });
+  });
+})();
+
+/* ────────────────────────────────────────────────────────── */
+/*  10 · MUSIC BOX                                             */
+/*     click anywhere on the box → key turns, lid opens,       */
+/*     dancer rises and notes float upward. Click again        */
+/*     to close.                                               */
+/* ────────────────────────────────────────────────────────── */
+(function(){
+  const box = document.getElementById('box');
+  if(!box) return;
+
+  const toggle = ()=>{
+    if(box.classList.contains('is-open')){
+      box.classList.remove('is-open','is-winding');
+      return;
+    }
+    box.classList.add('is-winding');
+    setTimeout(()=>{
+      box.classList.add('is-open');
+    }, 900);
+    // remove winding state after the key animation finishes (≈2.2s)
+    setTimeout(()=>{
+      box.classList.remove('is-winding');
+    }, 2300);
+  };
+
+  box.addEventListener('click', toggle);
+  kbToggle(box, toggle);
+})();
+
+</script>
+</body>
+</html>

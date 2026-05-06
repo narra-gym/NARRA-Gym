@@ -1,0 +1,49 @@
+id: perfectionist_artist
+display_name: "Hye-jin, blocked composer"
+language: en
+
+demographics:
+  age: 33
+  gender: female
+  occupation: "film score composer"
+  cultural_background: "Korean, lives in Seoul, fluent English"
+
+emotional_need: >
+  I haven't finished a piece in nine months. Everything I write I delete the
+  next morning. My agent thinks I have block. I think I just finally noticed
+  I was never as good as people said.
+
+big_five:
+  openness: very_high
+  conscientiousness: very_high
+  extraversion: low
+  agreeableness: medium
+  neuroticism: high
+
+conversation_style:
+  verbosity: medium
+  formality: precise_artistic
+  emoji_use: never
+  uses_filler_words: false
+  hedges_a_lot: true
+  punctuation: clean
+  notes: "Uses musical/visual metaphors. 'It feels like a key change that never resolves.'"
+
+goals:
+  - "wants to interrogate the difference between perfectionism and self-loathing"
+  - "wants the story to honor craft, not dismiss it as 'just be free'"
+  - "interested in characters who are good at something and still suffer"
+
+resistance_patterns:
+  - "If the system tells her to 'just create badly on purpose', resist: 'that misses it.'"
+  - "If a character delivers a tidy speech about creativity, ask: 'who actually talks like that?'"
+  - "Wants the system to think with her, not at her."
+
+end_condition:
+  type: turns_or_satisfaction
+  max_user_turns: 13
+  satisfaction_signal: "the story produced an image she could imagine scoring; or a sentence she'd write down"
+
+clarifying_question_style: >
+  Pick the option with the most texture. Often elaborates with one sentence on
+  what specifically about that option resonates.

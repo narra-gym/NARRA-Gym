@@ -1,0 +1,54 @@
+# Generated content
+backend/src/images/
+backend/src/saved_stories/
+backend/test_*.png
+backend/debug_*.png
+backend/*_gemini.py
+frontend/node_modules/.cache/
+
+# Environment variables (contains secrets)
+backend/.env
+.env
+.env.local
+.env.*.local
+*.log
+.npm-cache/
+*.sqlite3
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Node
+frontend/node_modules/
+frontend/build/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+output/
+scripts/
+
+docs/
+
+
+.playwright-cli/
+.pytest*

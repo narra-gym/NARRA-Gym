@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --emo-ink: #3f3029;
+  --emo-ink-soft: rgba(63, 48, 41, 0.82);
+  --emo-ink-muted: rgba(63, 48, 41, 0.62);
+  --emo-accent: #735548;
+  --emo-accent-strong: #5f463a;
+  --emo-glass: rgba(248, 243, 235, 0.9);
+  --emo-glass-strong: rgba(255, 250, 245, 0.94);
+  --emo-glass-border: rgba(115, 85, 72, 0.18);
+}
+
+body {
+  margin: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(1100px 700px at 5% 8%,  rgba(125, 184, 162, 0.14), transparent 45%),
+    radial-gradient(900px  600px at 92% 15%, rgba(232, 168, 152, 0.13), transparent 45%),
+    radial-gradient(800px  500px at 50% 95%, rgba(176, 168, 216, 0.11), transparent 45%),
+    linear-gradient(165deg, #faf8f5 0%, #f3ede5 100%);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+@keyframes typewriter-blink {
+  from, to { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.typewriter-cursor {
+  animation: typewriter-blink 1s step-end infinite;
+}
+
+/* Soft aurora shimmer — 治愈系暖绿 × 桃粉 × 薰衣草 */
+.aurora-shimmer::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: -20%;
+  width: 140%;
+  height: 140%;
+  background: radial-gradient(800px 500px at 20% 30%, rgba(125, 184, 162, 0.13), transparent 42%),
+              radial-gradient(700px 500px at 80% 20%, rgba(232, 168, 152, 0.11), transparent 42%),
+              radial-gradient(900px 600px at 50% 85%, rgba(176, 168, 216, 0.10), transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(22px);
+  animation: aurora-float 20s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-float {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(2%, -1%, 0) scale(1.02); }
+  100% { transform: translate3d(-1%, 2%, 0) scale(1.01); }
+}
+
+/* Flower start button (namespaced) */
+.emo-btn {
+  height: 4em;
+  width: 12em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.emo-btn:disabled {
+  cursor: not-allowed;
+}
+
+.emo-wrapper {
+  height: 2.8em;
+  width: auto;
+  min-width: 12em;
+  position: relative;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.emo-text {
+  font-size: 17px;
+  z-index: 1;
+  color: var(--emo-ink);
+  padding: 6px 14px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.95), rgba(249, 240, 232, 0.92));
+  border: 1px solid var(--emo-glass-border);
+  box-shadow: 0 10px 22px rgba(56, 38, 28, 0.16);
+  transition: all 0.5s ease;
+  backdrop-filter: blur(6px);
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.emo-btn:disabled .emo-text {
+  color: rgba(63, 48, 41, 0.58);
+  background: rgba(255, 250, 245, 0.8);
+  box-shadow: 0 6px 14px rgba(56, 38, 28, 0.08);
+}
+
+.emo-flower {
+  display: grid;
+  grid-template-columns: 1.2em 1.2em;
+  position: absolute;
+  transition: grid-template-columns 0.8s ease;
+}
+
+.emo-flower1 { top: -12px; left: -13px; transform: rotate(5deg); }
+.emo-flower2 { bottom: -5px; left: 8px; transform: rotate(35deg); }
+.emo-flower3 { bottom: -15px; transform: rotate(0deg); }
+.emo-flower4 { top: -14px; transform: rotate(15deg); }
+.emo-flower5 { right: 11px; top: -3px; transform: rotate(25deg); }
+.emo-flower6 { right: -15px; bottom: -15px; transform: rotate(30deg); }
+
+.emo-petal {
+  height: 1em;
+  width: 1em;
+  border-radius: 40% 70% / 7% 90%;
+  background: linear-gradient(145deg, #ffffff, #f0c8be);
+  border: 0.5px solid rgba(232, 168, 152, 0.7);
+  z-index: 0;
+  transition: width 0.8s ease, height 0.8s ease;
+}
+
+.emo-btn .two { transform: rotate(90deg); }
+.emo-btn .three { transform: rotate(270deg); }
+.emo-btn .four { transform: rotate(180deg); }
+
+.emo-btn:hover .emo-petal {
+  background: linear-gradient(145deg, #fff5f2, #e8a898);
+  border: 0.5px solid rgba(232, 168, 152, 0.95);
+}
+
+.emo-btn:hover .emo-flower { grid-template-columns: 1.8em 1.8em; }
+.emo-btn:hover .emo-flower .emo-petal { width: 1.8em; height: 1.8em; }
+.emo-btn:hover .emo-text {
+  background: linear-gradient(180deg, rgba(255, 254, 251, 0.98), rgba(252, 243, 236, 0.95));
+  border-color: rgba(115, 85, 72, 0.26);
+  box-shadow: 0 12px 26px rgba(56, 38, 28, 0.2);
+}
+
+.emo-btn:hover div.emo-flower1 { animation: emo-flower1 15s linear 0s infinite; }
+.emo-btn:hover div.emo-flower2 { animation: emo-flower2 13s linear 1s infinite; }
+.emo-btn:hover div.emo-flower3 { animation: emo-flower3 16s linear 1s infinite; }
+.emo-btn:hover div.emo-flower4 { animation: emo-flower4 17s linear 1s infinite; }
+.emo-btn:hover div.emo-flower5 { animation: emo-flower5 20s linear 1s infinite; }
+.emo-btn:hover div.emo-flower6 { animation: emo-flower6 15s linear 1s infinite; }
+
+@keyframes emo-flower1 { 0% { transform: rotate(5deg);} 100% { transform: rotate(365deg);} }
+@keyframes emo-flower2 { 0% { transform: rotate(35deg);} 100% { transform: rotate(-325deg);} }
+@keyframes emo-flower3 { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+@keyframes emo-flower4 { 0% { transform: rotate(15deg);} 100% { transform: rotate(375deg);} }
+@keyframes emo-flower5 { 0% { transform: rotate(25deg);} 100% { transform: rotate(-335deg);} }
+@keyframes emo-flower6 { 0% { transform: rotate(30deg);} 100% { transform: rotate(390deg);} }
+
+/* Orbiting particles */
+/* Single particle around edge (non-uniform speed) */
+.emo-orbit-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(115, 85, 72, 0.95);
+  box-shadow: 0 0 10px rgba(115, 85, 72, 0.35);
+  pointer-events: none;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  animation: emo-perimeter 5.6s linear infinite;
+}
+
+@keyframes emo-perimeter {
+  0%   { top: 0px; left: 0px; }
+  /* top edge left->right (fast) */
+  12%  { top: 0px; left: calc(100% - 6px); }
+  /* right edge top->bottom (slow) */
+  42%  { top: calc(100% - 6px); left: calc(100% - 6px); }
+  /* bottom edge right->left (medium) */
+  67%  { top: calc(100% - 6px); left: 0px; }
+  /* left edge bottom->top (fast) */
+  100% { top: 0px; left: 0px; }
+}

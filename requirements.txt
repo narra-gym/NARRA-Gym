@@ -1,0 +1,34 @@
+# =============================================================================
+# EmoNest / StoryGame — Global Python Dependencies
+# =============================================================================
+# Install with:  python -m pip install -r requirements.txt
+# Important: install into the same interpreter you use to launch run_app.py
+# These are the same as backend/requirements.txt and kept at the project root
+# for convenience.
+# =============================================================================
+
+# --- Web framework ---
+fastapi==0.104.0
+uvicorn==0.23.2
+pydantic==2.5.3
+pydantic-settings==2.2.1
+python-multipart==0.0.6
+python-dotenv==1.0.0
+
+# --- HTTP clients ---
+requests==2.31.0
+httpx==0.25.0
+
+# --- LLM providers ---
+openai==1.39.0
+google-genai>=1.0.0
+
+# --- Image processing ---
+Pillow>=10.0.0
+replicate>=0.30.0
+
+# --- Testing ---
+pytest==7.4.2
+
+# --- Simulation framework (LLM-driven user + judge) ---
+PyYAML>=6.0

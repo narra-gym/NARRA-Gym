@@ -1,0 +1,20 @@
+# Install with:  python -m pip install -r backend/requirements.txt
+# Important: install into the same interpreter you use to launch run_app.py
+fastapi==0.104.0
+uvicorn==0.23.2
+pydantic==2.5.3
+pydantic-settings==2.2.1
+python-multipart==0.0.6
+python-dotenv==1.0.0
+requests==2.31.0
+httpx==0.25.0
+# For OpenAI integration
+openai==1.39.0
+# For Google Gemini integration
+google-genai>=1.0.0
+# For Replicate integration (background removal)
+replicate>=0.30.0
+# For image processing
+Pillow>=10.0.0
+# For testing
+pytest==7.4.2
