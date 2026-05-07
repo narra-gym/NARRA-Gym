@@ -164,17 +164,9 @@ Each run emits one JSON line to `simulation/results/sim_runs_*.jsonl` with the f
 <p align="center">
   <img src="figures/results.png" alt="Benchmark Results across Models" width="900">
 </p>
-
-<br/>
-
 <p align="center">
   <img src="figures/robustness.png" alt="Robustness Analysis" width="900">
 </p>
-
-Per-model and per-dimension comparisons are committed under [`output/`](output/), including head-to-head deltas (e.g., [`benchmark_scores_model_compare_2026-05-04_vs_2026-05-06.md`](output/benchmark_scores_model_compare_2026-05-04_vs_2026-05-06.md)).
-
----
-
 ## Repo Layout
 
 ```
