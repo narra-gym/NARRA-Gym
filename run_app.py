@@ -332,10 +332,10 @@ def main():
 
     if is_command_available("yarn"):
         frontend_cmd = [yarn_cmd, "start"]
-        print_colored("Starting EmoNest with yarn...", YELLOW)
+        print_colored("Starting NARRA-Gym with yarn...", YELLOW)
     elif is_command_available("npm"):
         frontend_cmd = [npm_cmd, "start"]
-        print_colored("Starting EmoNest with npm...", YELLOW)
+        print_colored("Starting NARRA-Gym with npm...", YELLOW)
     else:
         print_colored("Error: Neither yarn nor npm found. Cannot start frontend.", RED)
         sys.exit(1)

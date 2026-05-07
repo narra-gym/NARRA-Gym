@@ -299,7 +299,7 @@ const ExperimentMode: React.FC = () => {
             }}
           >
             <Typography variant="h4" align="center" sx={{ color: headingColor, fontWeight: 700, mb: 1 }}>
-              EmoNest Benchmark Mode
+              NARRA-Gym Benchmark Mode
             </Typography>
             <Typography align="center" sx={{ color: bodyColor, mb: 3, lineHeight: 1.8 }}>
               {blindBenchmarkMode

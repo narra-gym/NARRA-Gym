@@ -1,4 +1,4 @@
-"""HTTP client wrapping the EmoNest backend API as a black-box system-under-test."""
+"""HTTP client wrapping the NARRA-Gym backend API as a black-box system-under-test."""
 from __future__ import annotations
 
 import logging
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class SUTClient:
-    """Synchronous wrapper around the EmoNest FastAPI server."""
+    """Synchronous wrapper around the NARRA-Gym FastAPI server."""
 
     def __init__(self, base_url: str = "http://127.0.0.1:11454", timeout: float = 600.0):
         self.base_url = base_url.rstrip("/")

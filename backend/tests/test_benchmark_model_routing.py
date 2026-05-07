@@ -31,7 +31,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
             base_kwargs = {
                 "LLM_API_KEY": "fallback-key",
                 "OPENAI_API_KEY": "fallback-key",
-                "OPENROUTER_APP_NAME": "EmoNest",
+                "OPENROUTER_APP_NAME": "NARRA-Gym",
             }
             base_kwargs.update(overrides)
             return Settings(
@@ -73,7 +73,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_default_benchmark_model_options_include_all_eight_models(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
         )
@@ -91,8 +91,8 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_openrouter_route_uses_openrouter_transport(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
-            OPENROUTER_APP_NAME="EmoNest QA",
+            OPENROUTER_SITE_URL="https://narragym.example",
+            OPENROUTER_APP_NAME="NARRA-Gym QA",
         )
 
         route = settings.get_model_route("openai/gpt-5.4")
@@ -102,8 +102,8 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
         self.assertEqual(route["base_url"], DEFAULT_OPENROUTER_BASE_URL)
         self.assertEqual(route["api_key"], "openrouter-key")
         self.assertEqual(route["api_model"], "openai/gpt-5.4")
-        self.assertEqual(route["default_headers"]["HTTP-Referer"], "https://emonest.example")
-        self.assertEqual(route["default_headers"]["X-Title"], "EmoNest QA")
+        self.assertEqual(route["default_headers"]["HTTP-Referer"], "https://narragym.example")
+        self.assertEqual(route["default_headers"]["X-Title"], "NARRA-Gym QA")
         self.assertTrue(route["available"])
 
     def test_doubao_route_marks_missing_credentials_unavailable(self):
@@ -171,7 +171,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_selected_benchmark_model_overrides_all_non_image_text_tasks(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
         )
         client, store = self.build_client(settings)
@@ -212,7 +212,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_blind_mode_accepts_invite_code_and_returns_invite_code(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
         )
@@ -229,7 +229,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_blind_mode_rejects_invalid_code(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
         )
@@ -243,7 +243,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_blind_mode_rejects_noncanonical_model_count(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
             BENCHMARK_MODEL_OPTIONS_JSON="""[
@@ -268,7 +268,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_blind_mode_reuses_active_session_and_advances_only_after_completion(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
         )
@@ -300,7 +300,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_blind_mode_blocks_fifth_session(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
         )
@@ -319,7 +319,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_quick_test_code_zero_cycles_through_hidden_slots(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
         )
@@ -345,7 +345,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_quick_test_code_zero_blocks_fifth_session(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
         )
@@ -364,7 +364,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_quick_test_story_starts_in_endgame_ready_state(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
         )
@@ -394,7 +394,7 @@ class BenchmarkModelRoutingTests(unittest.TestCase):
     def test_blind_session_detail_is_sanitized_but_export_keeps_selected_model(self):
         settings = self.build_settings(
             OPENROUTER_API_KEY="openrouter-key",
-            OPENROUTER_SITE_URL="https://emonest.example",
+            OPENROUTER_SITE_URL="https://narragym.example",
             ARK_API_KEY="ark-key",
             DOUBAO_SEED_2_0_PRO_ENDPOINT_ID="ep-20260404",
         )

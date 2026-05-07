@@ -1,4 +1,4 @@
-"""End-to-end runner: drive simulated personas through the EmoNest backend
+"""End-to-end runner: drive simulated personas through the NARRA-Gym backend
 and score the resulting sessions.
 
 Usage examples:
@@ -452,11 +452,11 @@ def _default_sim_user_model_for_persona(persona: Persona) -> Optional[str]:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
-    parser = argparse.ArgumentParser(description="Run LLM-simulated user sessions against EmoNest.")
+    parser = argparse.ArgumentParser(description="Run LLM-simulated user sessions against NARRA-Gym.")
     parser.add_argument(
         "--sut-base-url",
         default=os.environ.get("SUT_BASE_URL", "http://127.0.0.1:11454"),
-        help="Base URL of the EmoNest backend (default: http://127.0.0.1:11454).",
+        help="Base URL of the NARRA-Gym backend (default: http://127.0.0.1:11454).",
     )
     parser.add_argument(
         "--persona",

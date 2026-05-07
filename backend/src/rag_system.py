@@ -6,7 +6,7 @@ from datetime import datetime
 
 class RAGSystem:
     """
-    Retrieval-Augmented Generation (RAG) system for the EmoNest application.
+    Retrieval-Augmented Generation (RAG) system for the NARRA-Gym application.
     
     This is a placeholder implementation. In a real system, this would:
     1. Connect to a vector database (Pinecone/Weaviate)

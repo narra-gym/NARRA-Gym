@@ -6,6 +6,6 @@ jest.mock('./components/ShaderBackground', () => () => <div data-testid="shader-
 
 test('renders the home screen', () => {
   render(<App />);
-  expect(screen.getByText(/EmoNest/i)).toBeInTheDocument();
+  expect(screen.getByText(/NARRA-Gym/i)).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /Benchmark Mode/i })).toBeInTheDocument();
 });

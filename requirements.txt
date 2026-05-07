@@ -1,5 +1,5 @@
 # =============================================================================
-# EmoNest / StoryGame — Global Python Dependencies
+# NARRA-Gym / StoryGame — Global Python Dependencies
 # =============================================================================
 # Install with:  python -m pip install -r requirements.txt
 # Important: install into the same interpreter you use to launch run_app.py

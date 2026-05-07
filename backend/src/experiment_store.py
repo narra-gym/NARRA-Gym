@@ -177,7 +177,7 @@ class ExperimentStore:
                 {
                     "id": "baseline",
                     "name": "Baseline",
-                    "description": "Default EmoNest benchmark condition",
+                    "description": "Default NARRA-Gym benchmark condition",
                     "active": True,
                     "llm_config": self._default_llm_config(),
                     "metadata": {},

@@ -1,5 +1,5 @@
 <h1 align="center">NARRA-Gym</h1>
-<h3 align="center">A Quiet Evaluation Environment for Large Language Models<br/>Asked to Hold a Story in Their Hands</h3>
+<h3 align="center">Evaluating Narrative Agents</h3>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB.svg?logo=python&logoColor=white" alt="Python">
@@ -18,7 +18,7 @@
   <a href="#interface">Interface</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="#benchmark">Benchmark</a> •
-  <a href="#results">Results</a> •
+  <a href="#results">Results</a>
 </p>
 
 ---
@@ -156,8 +156,6 @@ python -m simulation.runner --sut-model openai/gpt-5.4-mini --runs 5 --out-dir s
 Each run emits one JSON line to `simulation/results/sim_runs_*.jsonl` with the full transcript, all judge scores, and timing.
 
 > ⚠️ **Always pair `SIM_USER_MODEL` and `JUDGE_MODEL` from different model families.** Same family = self-preference bias = inflated scores.
-
-See [`simulation/README.md`](simulation/README.md) for the persona schema, full env reference, and output format.
 
 ---
 

@@ -1,6 +1,6 @@
-# EmoNest Simulation Framework
+# NARRA-Gym Simulation Framework
 
-LLM-driven simulated users + LLM-as-a-judge for benchmarking the EmoNest
+LLM-driven simulated users + LLM-as-a-judge for benchmarking the NARRA-Gym
 interactive story engine.
 
 ## What it does
@@ -11,7 +11,7 @@ For each run, the framework:
 2. Spins up a **simulated user agent** (LLM #1) that stays in character and
    produces every required input: emotional need, clarifying-question answers,
    keyword selections, free-text messages, and branching choices.
-3. Drives the real EmoNest backend end-to-end via its HTTP API as a black box.
+3. Drives the real NARRA-Gym backend end-to-end via its HTTP API as a black box.
 4. After the session ends, runs **two scorers**:
    - the existing backend `/experiments/judge` for system-quality scores
      (overall, emotional alignment, narrative coherence, supportiveness, slop_stats),
@@ -32,7 +32,7 @@ simulation/
 ├── personas/                 # one YAML per persona (15 included)
 ├── llm.py                    # OpenAI-compatible client + .env loader
 ├── personas.py               # persona loader
-├── sut_client.py             # HTTP wrapper around the EmoNest backend
+├── sut_client.py             # HTTP wrapper around the NARRA-Gym backend
 ├── simulated_user.py         # the persona-faithful user agent
 ├── judge.py                  # backend judge passthrough + extended UX rubric
 ├── runner.py                 # orchestrator + CLI
@@ -65,14 +65,14 @@ already configured for the backend will work. You can override per role with:
 | `JUDGE_BASE_URL`          | (same)                                        |
 | `JUDGE_MODEL`             | model id; recommended **different family**    |
 | `JUDGE_TEMPERATURE`       | float, default 0.2                            |
-| `SUT_BASE_URL`            | EmoNest backend URL (default 127.0.0.1:11454) |
+| `SUT_BASE_URL`            | NARRA-Gym backend URL (default 127.0.0.1:11454) |
 
 Strongly recommended: pick a different model family for the judge than for the
 simulated user, otherwise scores skew high (self-preference bias).
 
 ## Quick start
 
-1. Start the EmoNest backend (so the API is reachable):
+1. Start the NARRA-Gym backend (so the API is reachable):
    ```bash
    bash run_app.sh        # or python run_app.py
    ```

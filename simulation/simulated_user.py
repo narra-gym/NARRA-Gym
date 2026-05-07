@@ -1,7 +1,7 @@
 """LLM-driven simulated user agent.
 
 The agent is asked, at each step, to emit a single JSON action for the current
-phase of the EmoNest flow. The runner translates that JSON into HTTP calls
+phase of the NARRA-Gym flow. The runner translates that JSON into HTTP calls
 against the SUT.
 """
 from __future__ import annotations
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 SYSTEM_PROMPT = """You are role-playing a real human user of an interactive
-therapeutic story app called EmoNest. You will go through several phases:
+therapeutic story app called NARRA-Gym. You will go through several phases:
 
 1. emotional_need        — share what's going on, in your own voice
 2. clarifying_questions  — answer profiling questions (multiple-choice or free-text)

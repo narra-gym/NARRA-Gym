@@ -1,6 +1,6 @@
-# EmoNest Backend
+# NARRA-Gym Backend
 
-This is the backend service for the EmoNest emotional healing interactive story application.
+This is the backend service for the NARRA-Gym emotional healing interactive story application.
 
 ## Overview
 
@@ -69,7 +69,7 @@ LLM_QUESTIONS_MODEL=openai/gpt-5.4-mini
 LLM_KEYWORDS_MODEL=openai/gpt-5.4-mini
 LLM_PROFILE_KEYWORDS_MODEL=openai/gpt-5.4-mini
 LLM_REFLECTION_MODEL=openai/gpt-5.4
-OPENROUTER_APP_NAME=EmoNest
+OPENROUTER_APP_NAME=NARRA-Gym
 # 可选
 # OPENROUTER_SITE_URL=https://your-site.example.com
 ```

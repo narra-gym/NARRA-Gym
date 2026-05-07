@@ -1,5 +1,5 @@
 """
-Context Management System for the EmoNest Application.
+Context Management System for the NARRA-Gym Application.
 Handles user profiles, story state, user journey, and narrative summaries.
 """
 

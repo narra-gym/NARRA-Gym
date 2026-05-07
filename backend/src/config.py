@@ -155,7 +155,7 @@ class Settings(BaseSettings):
     # OpenRouter benchmark routing
     OPENROUTER_API_KEY: Optional[str] = os.getenv("OPENROUTER_API_KEY")
     OPENROUTER_SITE_URL: Optional[str] = os.getenv("OPENROUTER_SITE_URL")
-    OPENROUTER_APP_NAME: Optional[str] = os.getenv("OPENROUTER_APP_NAME", "EmoNest")
+    OPENROUTER_APP_NAME: Optional[str] = os.getenv("OPENROUTER_APP_NAME", "NARRA-Gym")
 
     # Volcengine Ark / Doubao benchmark routing
     ARK_API_KEY: Optional[str] = os.getenv("ARK_API_KEY")

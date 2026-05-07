@@ -105,7 +105,7 @@ class LLMConfig:
 
         extra_headers: Dict[str, str] = {}
         if provider == "openrouter":
-            app_name = os.environ.get("OPENROUTER_APP_NAME") or "EmoNest-Simulation"
+            app_name = os.environ.get("OPENROUTER_APP_NAME") or "NARRA-Gym-Simulation"
             site_url = os.environ.get("OPENROUTER_SITE_URL") or ""
             extra_headers["X-Title"] = app_name
             if site_url:

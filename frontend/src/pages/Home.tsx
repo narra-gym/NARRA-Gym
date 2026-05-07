@@ -77,7 +77,7 @@ const Home: React.FC = () => {
       {/* staged fade-in: no text at very start, white text */}
       <Fade in timeout={2200}>
         <Typography variant="h2" sx={{ fontWeight: 700, mb: 4, textShadow: '0 0 10px rgba(255,255,255,0.8)', zIndex: 2, color: '#fff' }}>
-          EmoNest
+          NARRA-Gym
         </Typography>
       </Fade>
 

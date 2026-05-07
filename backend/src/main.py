@@ -185,7 +185,7 @@ def _frontend_access_error(detail: str) -> JSONResponse:
     return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"detail": detail})
 
 app = FastAPI(
-    title="EmoNest API",
+    title="NARRA-Gym API",
     description="API for the emotional healing interactive story application."
 )
 

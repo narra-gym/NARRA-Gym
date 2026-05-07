@@ -173,11 +173,11 @@ fi
 
 # Check for npm or yarn
 if command_exists yarn; then
-  echo -e "${YELLOW}Starting EmoNest with yarn...${NC}"
+  echo -e "${YELLOW}Starting NARRA-Gym with yarn...${NC}"
   yarn start &
   FRONTEND_PID=$!
 elif command_exists npm; then
-  echo -e "${YELLOW}Starting EmoNest with npm...${NC}"
+  echo -e "${YELLOW}Starting NARRA-Gym with npm...${NC}"
   npm start &
   FRONTEND_PID=$!
 else

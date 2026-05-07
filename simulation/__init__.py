@@ -1,1 +1,1 @@
-"""LLM-driven simulated user + judge framework for the EmoNest story engine."""
+"""LLM-driven simulated user + judge framework for the NARRA-Gym story engine."""
