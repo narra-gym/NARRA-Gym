@@ -161,12 +161,13 @@ Each run emits one JSON line to `simulation/results/sim_runs_*.jsonl` with the f
 
 ## Results
 
-<p align="center">
-  <img src="figures/results.png" alt="Benchmark Results across Models" width="900">
-</p>
-<p align="center">
-  <img src="figures/robustness.png" alt="Robustness Analysis" width="900">
-</p>
+![results](./assets/results.png)
+
+![robustness](./assets/robustness.png)
+
+
+---
+
 ## Repo Layout
 
 ```
