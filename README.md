@@ -1,5 +1,10 @@
-<h1 align="center">NARRA-Gym</h1>
+<p align="center">
+  <img src="figures/logo.png" alt="NARRA-Gym" width="420">
+</p>
 <h3 align="center">Evaluating Narrative Agents</h3>
+<p align="center">
+  🌐 <a href="https://narra-gym.github.io">narra-gym.github.io</a>
+</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB.svg?logo=python&logoColor=white" alt="Python">
@@ -13,6 +18,7 @@
 </p>
 
 <p align="center">
+  <a href="https://narra-gym.github.io">Website</a> •
   <a href="#overview">Overview</a> •
   <a href="#architecture">Architecture</a> •
   <a href="#interface">Interface</a> •
