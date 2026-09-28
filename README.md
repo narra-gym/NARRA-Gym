@@ -9,12 +9,15 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB.svg?logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/Node.js-18+-339933.svg?logo=node.js&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg?logo=fastapi&logoColor=white" alt="FastAPI">
+  <!-- <img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg?logo=fastapi&logoColor=white" alt="FastAPI"> -->
   <img src="https://img.shields.io/badge/Frontend-React%20%2B%20TS-61DAFB.svg?logo=react&logoColor=white" alt="React">
   <br/>
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/Models-OpenAI%20%7C%20Anthropic%20%7C%20Gemini%20%7C%20DeepSeek%20%7C%20Qwen-purple" alt="Supported Models">
-  <img src="https://img.shields.io/badge/Eval-LLM--as--Judge%20%2B%20Human-orange" alt="Evaluation">
+  <a href="https://arxiv.org/pdf/2605.08503">
+    <img src="https://img.shields.io/badge/arXiv-2605.08503-b31b1b.svg" alt="arXiv">
+  </a>
+  <!-- <img src="https://img.shields.io/badge/Models-OpenAI%20%7C%20Anthropic%20%7C%20Gemini%20%7C%20DeepSeek%20%7C%20Qwen-purple" alt="Supported Models"> -->
+  <!-- <img src="https://img.shields.io/badge/Eval-LLM--as--Judge%20%2B%20Human-orange" alt="Evaluation"> -->
 </p>
 
 <p align="center">
@@ -218,3 +221,13 @@ The complete environment-variable list lives in [`backend/.env.example`](backend
 | Benchmark (sim) | `SIM_USER_MODEL`, `SIM_USER_TEMPERATURE`, `JUDGE_MODEL`, `JUDGE_TEMPERATURE`, `SUT_BASE_URL` |
 
 Models that reject a `temperature` parameter can be listed in `LLM_TEMPERATURELESS_MODELS` (comma-separated).
+
+## Citation
+@inproceedings{
+  anonymous2026narragym,
+  title={{NARRA}-Gym for Evaluating Interactive Narrative Agents},
+  author={Anonymous},
+  booktitle={The Fortieth Annual Conference on Neural Information Processing Systems Evaluations and Datasets Track},
+  year={2026},
+  url={https://openreview.net/forum?id=4FCyCE3Juy}
+}
