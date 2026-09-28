@@ -14,10 +14,8 @@
   <img src="https://img.shields.io/badge/Node.js-18+-339933.svg?logo=node.js&logoColor=white" alt="Node.js">
   <!-- <img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg?logo=fastapi&logoColor=white" alt="FastAPI"> -->
   <img src="https://img.shields.io/badge/Frontend-React%20%2B%20TS-61DAFB.svg?logo=react&logoColor=white" alt="React">
-  <br/>
+  <!-- <br/> -->
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-  <!-- <img src="https://img.shields.io/badge/Models-OpenAI%20%7C%20Anthropic%20%7C%20Gemini%20%7C%20DeepSeek%20%7C%20Qwen-purple" alt="Supported Models"> -->
-  <!-- <img src="https://img.shields.io/badge/Eval-LLM--as--Judge%20%2B%20Human-orange" alt="Evaluation"> -->
 </p>
 
 <p align="center">
