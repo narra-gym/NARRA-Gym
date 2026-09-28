@@ -7,15 +7,15 @@
 </p>
 
 <p align="center">
+  <a href="https://arxiv.org/pdf/2605.08503">
+    <img src="https://img.shields.io/badge/arXiv-2605.08503-b31b1b.svg" alt="arXiv">
+  </a>
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB.svg?logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/Node.js-18+-339933.svg?logo=node.js&logoColor=white" alt="Node.js">
   <!-- <img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg?logo=fastapi&logoColor=white" alt="FastAPI"> -->
   <img src="https://img.shields.io/badge/Frontend-React%20%2B%20TS-61DAFB.svg?logo=react&logoColor=white" alt="React">
   <br/>
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-  <a href="https://arxiv.org/pdf/2605.08503">
-    <img src="https://img.shields.io/badge/arXiv-2605.08503-b31b1b.svg" alt="arXiv">
-  </a>
   <!-- <img src="https://img.shields.io/badge/Models-OpenAI%20%7C%20Anthropic%20%7C%20Gemini%20%7C%20DeepSeek%20%7C%20Qwen-purple" alt="Supported Models"> -->
   <!-- <img src="https://img.shields.io/badge/Eval-LLM--as--Judge%20%2B%20Human-orange" alt="Evaluation"> -->
 </p>
@@ -223,11 +223,13 @@ The complete environment-variable list lives in [`backend/.env.example`](backend
 Models that reject a `temperature` parameter can be listed in `LLM_TEMPERATURELESS_MODELS` (comma-separated).
 
 ## Citation
-@inproceedings{
-  anonymous2026narragym,
-  title={{NARRA}-Gym for Evaluating Interactive Narrative Agents},
-  author={Anonymous},
-  booktitle={The Fortieth Annual Conference on Neural Information Processing Systems Evaluations and Datasets Track},
-  year={2026},
-  url={https://openreview.net/forum?id=4FCyCE3Juy}
+
+```
+@inproceedings{yue2026narragym,
+  title     = {{NARRA}-Gym for Evaluating Interactive Narrative Agents},
+  author    = {Yue Huang and Yuchen Ma and Jiayi Ye and Wenjie Wang and Zipeng Ling and Xingjian Hu and Yuexing Hao and Zichen Chen and Zhangchen Xu and Yunhong He and Zhengqing Yuan and Yujun Zhou and Kehan Guo and Chaoran Chen and Toby Jia-Jun Li and Stefan Feuerriegel and Xiangliang Zhang},
+  booktitle = {The Fortieth Annual Conference on Neural Information Processing Systems Evaluations and Datasets Track},
+  year      = {2026},
+  url       = {https://openreview.net/forum?id=4FCyCE3Juy}
 }
+```
